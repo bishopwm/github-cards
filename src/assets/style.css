@@ -1,4 +1,4 @@
-@import 'mirotone/dist/styles.css';
+@import "mirotone/dist/styles.css";
 
 *,
 *:before,
@@ -19,7 +19,7 @@ body {
   height: 100%;
   line-height: 1.5;
   margin: 0;
-  padding: 2rem;
+  padding: 0px 2rem;
 }
 
 .container {
@@ -36,4 +36,58 @@ img {
 
 .button {
   text-decoration: none;
+}
+
+p {
+  font-size: 14px;
+  line-height: normal;
+}
+
+/* 
+
+  Github
+
+*/
+
+/* 
+
+  Miro
+
+*/
+
+#miro-container {
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.selection-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 10px 0px;
+}
+
+/* 
+
+  Select
+
+*/
+
+.select-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.select-label {
+  font-size: 14px;
+}
+
+.select-label span {
+  color: red;
 }
