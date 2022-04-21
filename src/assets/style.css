@@ -91,3 +91,13 @@ p {
 .select-label span {
   color: red;
 }
+
+/* 
+
+  Color Picker
+
+*/
+
+.circle-picker {
+  margin-top: 10px;
+}
