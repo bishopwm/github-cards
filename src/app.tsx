@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { Miro, GitHub } from "./components";
 
 function App() {
-  const [selectedTab, setSelectedTab] = React.useState("miro");
+  const [selectedTab, setSelectedTab] = React.useState("github");
 
   const handleSelectTab = (value: string) => {
     setSelectedTab(value);

@@ -8,8 +8,7 @@ export const insertAppCards = async (
   selection: MiroSelection,
   selectedColor: { background: string }
 ) => {
-  console.log(selection);
-  const appCard = await miro.board.createAppCard({
+  await miro.board.createAppCard({
     title: selection.content,
     description: "Github App Card Created",
     x: selection.x,

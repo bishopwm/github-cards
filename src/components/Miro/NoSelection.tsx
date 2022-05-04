@@ -10,7 +10,7 @@ const NoSelection = () => {
         to a GitHub card.
       </p>
 
-      <img src={selection} />
+      <img src={selection} draggable={false} />
     </>
   );
 };
