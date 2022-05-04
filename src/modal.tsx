@@ -11,6 +11,7 @@ import {
   fetchGitHubColumns,
   fetchGitHubCards,
   fetchGitHubIssues,
+  insertGitHubAppCards,
 } from "./utils";
 import type {
   GitHubProject,
@@ -129,6 +130,7 @@ function Modal() {
     return filteredGitHubIssuesWithStatus;
   };
 
+  // Handle when a GitHubIssueRow is selected or not
   const handleGitHubIssueSelect = (isChecked: boolean, issue: any) => {
     //  Set ore remove issue into selected state
     if (isChecked) {
@@ -141,8 +143,11 @@ function Modal() {
     }
   };
 
-  const handleImportClick = () => {
+  // Handle importing and converting GitHub issues to App Cards
+  const handleImportClick = async () => {
     console.log("SELECTED ISSUES", selectedGitHubIssues);
+    insertGitHubAppCards(selectedGitHubIssues);
+    await miro.board.ui.closeModal();
   };
 
   return (

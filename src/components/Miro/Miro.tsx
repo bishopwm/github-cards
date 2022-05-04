@@ -7,6 +7,7 @@ import {
   insertAppCards,
   removeSelectedItem,
 } from "../../utils";
+import { username, repo } from "../../constants";
 
 interface SelectedColumn {
   name: string;
@@ -37,11 +38,12 @@ const Miro = () => {
     }
   };
 
+  // Handle creating GitHub Issue & Card (inside project) in GitHub
   const handleCreateGitHubCards = (selectedItems: any[]) => {
     selectedItems.map((item) => {
       const cleanedContent = item.content.replace(/<\/?[^>]+(>|$)/g, "");
 
-      createGitHubIssue("addisonschultz", "github-cards", {
+      createGitHubIssue(username, repo, {
         title: cleanedContent,
         body: "Imported from Miro",
       })
@@ -59,13 +61,10 @@ const Miro = () => {
     });
   };
 
+  // Get selection on initialization
   React.useEffect(() => {
     getSelection();
   }, []);
-
-  React.useEffect(() => {
-    console.log(selectedColumn);
-  }, [selectedColumn]);
 
   return (
     <div id={"miro-container"}>

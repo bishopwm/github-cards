@@ -30,15 +30,15 @@ const Selection = ({
     body: "",
     id: 0,
   });
-  //   const [selectedColumn, setSelectedColumn] = React.useState("");
-  //   const [color, setColor] = React.useState({ background: "#1A1A1A" });
 
+  // Fetch Projects from GitHub
   React.useEffect(() => {
     fetchGitHubProjects(username, repo).then((projects) => {
       setGitHubProjects([...projects]);
     });
   }, []);
 
+  // Fetch Columns from selected Project
   React.useEffect(() => {
     if (gitHubProjects.length > 0) {
       fetchGitHubColumns(
@@ -50,6 +50,11 @@ const Selection = ({
       });
     }
   }, [gitHubProjects]);
+
+  // After fetching columns from GitHub, set default to the first one
+  React.useEffect(() => {
+    onSelectColumn(gitHubColumns[0]);
+  }, [gitHubColumns]);
 
   return (
     <div className="selection-container">
@@ -63,13 +68,10 @@ const Selection = ({
         label={"Column"}
         required={true}
         options={gitHubColumns}
-        // onChange={(e) => setSelectedColumn(JSON.parse(e.target.value))}
         onChange={(e) => onSelectColumn(JSON.parse(e.target.value))}
       />
-      {/* <Select label={"Owner (optional)"} required={false} /> */}
       <ColorPicker
         color={color.background}
-        // setColor={(color) => setColor(color)}
         setColor={(color) => onSelectColor(color)}
       />
     </div>

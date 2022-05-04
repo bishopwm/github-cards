@@ -1,6 +1,7 @@
 import * as React from "react";
 import Checkbox from "../Checkbox";
 import Tag from "../Tag";
+import { getStatusColor } from "../../utils";
 
 const GitHubIssueRow = ({
   title,
@@ -18,22 +19,7 @@ const GitHubIssueRow = ({
   const day = issueDate.getUTCDate();
   const year = issueDate.getUTCFullYear();
 
-  let color;
-
-  switch (status.name) {
-    case "To Do":
-      color = "#E53935";
-      break;
-    case "In Progress":
-      color = "#FFB300";
-      break;
-    case "Done":
-      color = "#7CB342";
-      break;
-    default:
-      color = "#C3C4C3";
-      break;
-  }
+  let color = getStatusColor(status.name);
 
   return (
     <>
