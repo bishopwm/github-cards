@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@types/react-color": "^3.0.6",
+    "framer-motion": "^6.3.3",
     "mirotone": "2.0.5",
     "octokit": "^1.7.1",
     "react": "17.0.2",

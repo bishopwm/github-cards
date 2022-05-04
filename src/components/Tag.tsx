@@ -1,9 +1,15 @@
 import * as React from "react";
 
-const Tag = ({ text }: { text: string }) => {
+const Tag = ({
+  status,
+  color,
+}: {
+  status: { name: string; id: any };
+  color: string;
+}) => {
   return (
-    <div id={"tag-container"}>
-      <p>In progress</p>
+    <div id={"tag-container"} style={{ backgroundColor: color }}>
+      <p>{status.name}</p>
     </div>
   );
 };

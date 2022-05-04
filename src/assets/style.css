@@ -110,8 +110,12 @@ p {
   width: 100%;
 }
 
+#modal-container {
+  height: 100%;
+}
+
 #modal-grid {
-  height: auto;
+  height: 60%;
   width: 100%;
   display: grid;
   align-items: center;
@@ -119,6 +123,8 @@ p {
   grid-template-rows: repeat(auto-fill, 35px);
   gap: 12px;
   margin: 24px 0px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 #grid-checkbox {
@@ -158,6 +164,9 @@ p {
 #github-issue-title {
   padding: 0px 12px;
   border-left: 4px solid #6799f5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* 
@@ -205,7 +214,6 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #ffb300;
   color: #ffffff;
 }
 
@@ -217,4 +225,18 @@ p {
 
 .circle-picker {
   margin-top: 10px;
+}
+
+/* 
+
+  Loader Container
+
+*/
+
+#loader-container {
+  display: flex;
+  justify-content: center;
+  grid-column-start: checkbox-start;
+  grid-column-end: end;
+  grid-row-start: 5;
 }

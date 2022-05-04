@@ -79,7 +79,26 @@ export const fetchGitHubCards = async (column_id: string) => {
   })
     .then((response) => response.json())
     .then((result) => {
-      console.log(result);
+      return result;
+    })
+    .catch((error) => console.error(error));
+
+  return gitHubCards;
+};
+
+/**
+ * Fetches a list of issues in a repository
+ *
+ * Returns {
+ * }
+ */
+export const fetchGitHubIssues = async (username: string, repo: string) => {
+  const gitHubCards = fetch(`${baseUrl}/repos/${username}/${repo}/issues`, {
+    method: "GET",
+    headers: headers,
+  })
+    .then((response) => response.json())
+    .then((result) => {
       return result;
     })
     .catch((error) => console.error(error));

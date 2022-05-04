@@ -9,13 +9,13 @@ const GitHubIssueHeader = () => {
         <Checkbox />
       </div>
       <div id={"grid-title"}>
-        <p>Issue title</p>
+        <p>Issue</p>
       </div>
       <div id={"grid-status"}>
         <p>Status</p>
       </div>
       <div id={"grid-date"}>
-        <p>Date</p>
+        <p>Date Created</p>
       </div>
     </>
   );

@@ -2,17 +2,8 @@ import * as React from "react";
 import Select from "../Select";
 import ColorPicker from "./ColorPicker";
 import { fetchGitHubProjects, fetchGitHubColumns } from "../../utils";
-
-interface GitHubProject {
-  name: string;
-  body: string;
-  id: number;
-}
-
-interface GitHubColumns {
-  name: string;
-  id: number;
-}
+import type { GitHubProject, GitHubColumns } from "../../types";
+import { username, repo } from "../../constants";
 
 const Selection = ({
   onSelectColumn,
@@ -43,7 +34,7 @@ const Selection = ({
   //   const [color, setColor] = React.useState({ background: "#1A1A1A" });
 
   React.useEffect(() => {
-    fetchGitHubProjects("addisonschultz", "github-cards").then((projects) => {
+    fetchGitHubProjects(username, repo).then((projects) => {
       setGitHubProjects([...projects]);
     });
   }, []);

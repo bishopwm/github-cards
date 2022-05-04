@@ -2,20 +2,56 @@ import * as React from "react";
 import Checkbox from "../Checkbox";
 import Tag from "../Tag";
 
-const GitHubIssueRow = ({ title, date }: { title: string; date: string }) => {
+const GitHubIssueRow = ({
+  title,
+  date,
+  status,
+  onSelect,
+}: {
+  title: string;
+  date: string;
+  status: { name: string; id: any };
+  onSelect: (value: boolean) => void;
+}) => {
+  const issueDate = new Date(date);
+  const month = issueDate.getUTCMonth() + 1;
+  const day = issueDate.getUTCDate();
+  const year = issueDate.getUTCFullYear();
+
+  let color;
+
+  switch (status.name) {
+    case "To Do":
+      color = "#E53935";
+      break;
+    case "In Progress":
+      color = "#FFB300";
+      break;
+    case "Done":
+      color = "#7CB342";
+      break;
+    default:
+      color = "#C3C4C3";
+      break;
+  }
+
   return (
     <>
       <div id={"grid-checkbox"}>
-        <Checkbox />
+        <Checkbox
+          onSetChecked={(value) => {
+            onSelect(value);
+          }}
+        />
       </div>
       <div id={"grid-title"}>
-        <p id={"github-issue-title"}>Create user-flows for authorization</p>
+        <p id={"github-issue-title"}>{title}</p>
       </div>
       <div id={"grid-status"}>
-        <Tag />
+        <Tag status={status} color={color} />
       </div>
       <div id={"grid-date"}>
-        <p>May 18th, 2022</p>
+        <p>{day + "/" + month + "/" + year}</p>
       </div>
     </>
   );
