@@ -9,8 +9,6 @@ const GitHub = () => {
     });
   };
 
-  const handleCreateNewCardClick = () => {};
-
   return (
     <div id={"github-container"}>
       <h3>Synced changes</h3>
@@ -27,13 +25,6 @@ const GitHub = () => {
         onClick={handleChooseGithubClick}
       >
         Choose from GitHub
-      </button>
-      <button
-        className="button button-secondary"
-        type="button"
-        onClick={handleCreateNewCardClick}
-      >
-        Create new card
       </button>
     </div>
   );
