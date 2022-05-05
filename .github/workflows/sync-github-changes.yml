@@ -7,4 +7,4 @@ jobs:
     runs-on: ubuntu-latest
     name: Project Card Updated
     steps:
-      - run: echo "${{ github.event.project_card }}"
+      - run: echo "$GITHUB.EVENT"
