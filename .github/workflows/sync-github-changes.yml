@@ -3,7 +3,8 @@ on:
   project_card:
     types: [created, deleted, updated, moved]
 jobs:
-  ProjectCard:
+  project_card_updated:
     runs-on: ubuntu-latest
+    name: Project Card Updated
     steps:
       - run: echo "Card updated!"
