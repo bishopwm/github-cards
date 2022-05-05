@@ -7,10 +7,3 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Card updated!"
-
-on: [push]
-jobs:
-  Push:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Running GitHub action on push."
