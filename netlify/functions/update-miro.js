@@ -33,7 +33,7 @@ exports.handler = async function (event) {
     data.map((item) => {
       axios
         .patch(
-          `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards`,
+          `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
           {
             data: {
               title: "Updated from Netlify Function",
