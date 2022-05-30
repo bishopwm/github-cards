@@ -13,8 +13,7 @@ jobs:
           url: "https://miro-github.netlify.app/.netlify/functions/project-cards"
           method: "POST"
           data: '{"gitHubProjectCard": ${{ toJSON(github.event.project_card) }}}'
-on:
-  issues:
+on: issues
 jobs:
   issue_updated:
     runs-on: ubuntu-latest
