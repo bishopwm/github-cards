@@ -10,7 +10,7 @@ jobs:
       - name: Deploy Stage
         uses: fjogeleit/http-request-action@v1.9.1
         with:
-          url: "http://locahost:3001/update-miro"
+          url: "http://localhost:3001/update-miro"
           method: "POST"
           customHeaders: '{"Content-Type": "application/json"}'
           data: '{"gitHubIssueId": "1"}'
