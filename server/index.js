@@ -7,7 +7,9 @@ app.get("/", (req, res) => {
 });
 
 app.post("/update-miro", (req, res) => {
+  console.log("request recieved");
   console.log(req.body);
+  res.send(200);
 });
 
 app.listen(port, () => {
