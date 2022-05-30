@@ -8,12 +8,17 @@ exports.handler = async function (event, context) {
   //   console.log("Event", event);
   //   console.log("Context", context);
   const body = JSON.parse(event.body);
+  const gitHubIssueId = body.gitHubIssueId;
 
-  console.log("Body", body);
+  //   console.log("Body", body);
+  //   console.log("Event Body", event.body);
+  console.log(gitHubIssueId);
 
   const { data, error } = await supabase
     .from("card-mappings")
-    .select("gitHubIssueId", "1");
+    .select("gitHubIssueId", gitHubIssueId);
+
+  console.log(data);
 
   return {
     statusCode: 200,
