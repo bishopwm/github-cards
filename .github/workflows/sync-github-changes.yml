@@ -7,9 +7,22 @@ jobs:
     runs-on: ubuntu-latest
     name: Project Card Updated
     steps:
-      - name: Update Miro
+      - name: Update Project Cards
         uses: fjogeleit/http-request-action@v1.9.1
         with:
-          url: "https://miro-github.netlify.app/.netlify/functions/update-miro"
+          url: "https://miro-github.netlify.app/.netlify/functions/project-cards"
           method: "POST"
-          data: '{"gitHubIssue": ${{ toJSON(github.event.project_card) }}}'
+          data: '{"gitHubProjectCard": ${{ toJSON(github.event.project_card) }}}'
+on:
+  issues:
+jobs:
+  issue_updated:
+    runs-on: ubuntu-latest
+    name: Issue Updated
+    steps:
+      - name: Update Issues
+        uses: fjogeleit/http-request-action@v1.9.1
+        with:
+          url: "https://miro-github.netlify.app/.netlify/functions/issues"
+          method: "POST"
+          data: '{"gitHubIssue": ${{ toJSON(github.event.issue) }}}'
