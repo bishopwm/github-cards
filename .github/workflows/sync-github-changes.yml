@@ -12,12 +12,4 @@ jobs:
         with:
           url: "https://miro-github.netlify.app/.netlify/functions/update-miro"
           method: "POST"
-          data: '{"gitHubIssueId": "1"}'
-  refresh-feed:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Fetch API Data 📦
-        uses: JamesIves/fetch-api-data-action@v2.2.2
-        with:
-          endpoint: https://miro-github.netlify.app/.netlify/functions/update-miro
-          configuration: '{ "method": "POST" }'
+          data: '{"gitHubIssueId": ${{ toJSON(github.event.project_card) }}}'
