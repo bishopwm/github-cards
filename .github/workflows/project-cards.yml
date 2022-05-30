@@ -1,4 +1,4 @@
-name: Sync GitHub Changes
+name: Project Cards
 on:
   project_card:
     types: [created, deleted, edited, moved]
@@ -13,15 +13,3 @@ jobs:
           url: "https://miro-github.netlify.app/.netlify/functions/project-cards"
           method: "POST"
           data: '{"gitHubProjectCard": ${{ toJSON(github.event.project_card) }}}'
-on: issues
-jobs:
-  issue_updated:
-    runs-on: ubuntu-latest
-    name: Issue Updated
-    steps:
-      - name: Update Issues
-        uses: fjogeleit/http-request-action@v1.9.1
-        with:
-          url: "https://miro-github.netlify.app/.netlify/functions/issues"
-          method: "POST"
-          data: '{"gitHubIssue": ${{ toJSON(github.event.issue) }}}'
