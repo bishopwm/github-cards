@@ -20,6 +20,7 @@ import type {
   GitHubIssue,
 } from "./types";
 import { username, repo } from "./constants";
+import { supabase } from "./utils";
 
 function Modal() {
   // Store loading state of GitHub Cards

@@ -30,7 +30,10 @@ export const removeSelectedItem = async (item: any) => {
 export const insertGitHubAppCards = async (gitHubIssues: any[]) => {
   await Promise.all(
     gitHubIssues.map(async (issue, index) => {
-      // Get status color
+      //  Get current Miro board
+      const { id } = await miro.board.getInfo();
+
+      // Get issue status color
       const color = await getStatusColor(issue.status.name);
 
       // Create App Card
@@ -60,6 +63,7 @@ export const insertGitHubAppCards = async (gitHubIssues: any[]) => {
           gitHubIssueId: issue.id,
           miroUserId: appCard.createdBy,
           gitHubUsername: issue.user.login,
+          miroBoardId: id,
         },
       ]);
     })
