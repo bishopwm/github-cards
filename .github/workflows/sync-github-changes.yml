@@ -10,7 +10,7 @@ jobs:
       - name: Update Miro
         uses: fjogeleit/http-request-action@v1.9.1
         with:
-          url: "http://localhost:3001/update-miro"
+          url: "https://miro-github.netlify.app/.netlify/functions/update-miro"
           method: "POST"
           data: '{"gitHubIssueId": "1"}'
   refresh-feed:
@@ -19,5 +19,5 @@ jobs:
       - name: Fetch API Data 📦
         uses: JamesIves/fetch-api-data-action@v2.2.2
         with:
-          endpoint: http://localhost:3001/update-miro
+          endpoint: https://miro-github.netlify.app/.netlify/functions/update-miro
           configuration: '{ "method": "POST" }'
