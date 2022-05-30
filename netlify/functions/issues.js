@@ -23,41 +23,41 @@ exports.handler = async function (event) {
   //     .select("gitHubIssueId", gitHubProjectCardId);
 
   // No Miro App Card Found
-  if (error) {
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        message: "No Miro App Card found for this issue",
-      }),
-    };
-  }
+  //   if (error) {
+  //     return {
+  //       statusCode: 200,
+  //       body: JSON.stringify({
+  //         message: "No Miro App Card found for this issue",
+  //       }),
+  //     };
+  //   }
 
   // Matching App Cards found
-  if (data) {
-    // const headers = {
-    //   Accept: "application/json",
-    //   "Content-Type": "application/json",
-    //   Authorization: `Bearer ${process.env.VITE_MIRO_API_TOKEN}`,
-    // };
-    // data.map((item) => {
-    //   axios
-    //     .patch(
-    //       `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
-    //       {
-    //         title: "Updated from Netlify Function",
-    //       },
-    //       {
-    //         headers: headers,
-    //       }
-    //     )
-    //     .then(function (response) {
-    //       res.json(response.data);
-    //     })
-    //     .catch(function (error) {
-    //       console.log(error);
-    //     });
-    // });
-  }
+  //   if (data) {
+  // const headers = {
+  //   Accept: "application/json",
+  //   "Content-Type": "application/json",
+  //   Authorization: `Bearer ${process.env.VITE_MIRO_API_TOKEN}`,
+  // };
+  // data.map((item) => {
+  //   axios
+  //     .patch(
+  //       `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
+  //       {
+  //         title: "Updated from Netlify Function",
+  //       },
+  //       {
+  //         headers: headers,
+  //       }
+  //     )
+  //     .then(function (response) {
+  //       res.json(response.data);
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+  // });
+  //   }
 
   return {
     statusCode: 200,
