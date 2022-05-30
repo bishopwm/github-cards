@@ -14,10 +14,12 @@ const supabase = createClient(
 
 exports.handler = async function (event) {
   // Get Issue
+  const body = JSON.parse(event.body);
+  const gitHubIssue = body.gitHubIssue;
 
-  const { data, error } = await supabase
-    .from("card-mapping")
-    .select("gitHubIssueId", gitHubProjectCardId);
+  //   const { data, error } = await supabase
+  //     .from("card-mapping")
+  //     .select("gitHubIssueId", gitHubProjectCardId);
 
   // No Miro App Card Found
   if (error) {
@@ -29,15 +31,13 @@ exports.handler = async function (event) {
     };
   }
 
-  console.log("Data", data);
   // Matching App Cards found
   if (data) {
-    const headers = {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.VITE_MIRO_API_TOKEN}`,
-    };
-
+    // const headers = {
+    //   Accept: "application/json",
+    //   "Content-Type": "application/json",
+    //   Authorization: `Bearer ${process.env.VITE_MIRO_API_TOKEN}`,
+    // };
     // data.map((item) => {
     //   axios
     //     .patch(
