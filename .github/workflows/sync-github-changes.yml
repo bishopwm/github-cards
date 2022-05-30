@@ -12,4 +12,4 @@ jobs:
         with:
           url: "https://miro-github.netlify.app/.netlify/functions/update-miro"
           method: "POST"
-          data: '{"gitHubIssueId": ${{ toJSON(github.event.project_card.id) }}}'
+          data: '{"gitHubIssue": ${{ toJSON(github.event.project_card) }}}'
