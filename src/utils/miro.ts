@@ -1,4 +1,6 @@
 import { getStatusColor } from "./index";
+import { supabase } from "./index";
+// import { createClient } from "@supabase/supabase-js";
 
 interface MiroSelection {
   content: string;
@@ -26,25 +28,40 @@ export const removeSelectedItem = async (item: any) => {
 };
 
 export const insertGitHubAppCards = async (gitHubIssues: any[]) => {
-  gitHubIssues.map(async (issue, index) => {
-    const color = getStatusColor(issue.status.name);
+  await Promise.all(
+    gitHubIssues.map(async (issue, index) => {
+      // Get status color
+      const color = await getStatusColor(issue.status.name);
 
-    await miro.board.createAppCard({
-      x: index * 350,
-      y: 0,
-      title: issue.title,
-      description: issue.body,
-      style: {
-        cardTheme: color,
-      },
-      fields: [
-        {
-          value: issue.status.name,
-          iconShape: "square",
-          fillColor: color,
-          textColor: "#ffffff",
+      // Create App Card
+      const appCard = await miro.board.createAppCard({
+        x: index * 350,
+        y: 0,
+        title: issue.title,
+        description: issue.body,
+        style: {
+          cardTheme: color,
         },
-      ],
-    });
-  });
+        fields: [
+          {
+            value: issue.status.name,
+            iconShape: "square",
+            fillColor: color,
+            textColor: "#ffffff",
+          },
+        ],
+        status: "connected",
+      });
+
+      // Post data to supabase
+      await supabase.from("card-mapping").insert([
+        {
+          miroAppCardId: appCard.id,
+          gitHubIssueId: issue.id,
+          miroUserId: appCard.createdBy,
+          gitHubUsername: issue.user.login,
+        },
+      ]);
+    })
+  );
 };

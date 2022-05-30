@@ -145,9 +145,9 @@ function Modal() {
 
   // Handle importing and converting GitHub issues to App Cards
   const handleImportClick = async () => {
-    console.log("SELECTED ISSUES", selectedGitHubIssues);
-    insertGitHubAppCards(selectedGitHubIssues);
-    await miro.board.ui.closeModal();
+    await insertGitHubAppCards(selectedGitHubIssues).then(() => {
+      miro.board.ui.closeModal();
+    });
   };
 
   return (

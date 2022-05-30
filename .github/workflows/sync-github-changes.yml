@@ -7,4 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Project Card Updated
     steps:
-      - run: echo "${{ toJSON(github.event.project_card) }}"
+      - name: Deploy Stage
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: "https://locahost:3001/update-miro"
+          method: "POST"
+          customHeaders: '{"Content-Type": "application/json"}'
+          data: '{"gitHubIssueId": "1"}'

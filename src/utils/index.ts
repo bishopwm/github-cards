@@ -14,7 +14,9 @@ export {
   insertGitHubAppCards,
 } from "./miro";
 
-export const getStatusColor = (status: string) => {
+export { supabase } from "./supabase";
+
+export const getStatusColor = async (status: string) => {
   let color;
 
   switch (status) {

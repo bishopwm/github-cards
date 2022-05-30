@@ -19,7 +19,16 @@ const GitHubIssueRow = ({
   const day = issueDate.getUTCDate();
   const year = issueDate.getUTCFullYear();
 
-  let color = getStatusColor(status.name);
+  const [color, setColor] = React.useState("#C3C4C3");
+
+  React.useEffect(() => {
+    async function generateStatusColor() {
+      const color = await getStatusColor(status.name);
+      setColor(color);
+    }
+
+    generateStatusColor();
+  });
 
   return (
     <>
