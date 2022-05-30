@@ -16,6 +16,7 @@ exports.handler = async function (event) {
   // Get Issue
   const body = JSON.parse(event.body);
   const gitHubIssue = body.gitHubIssue;
+  console.log(gitHubIssue);
 
   //   const { data, error } = await supabase
   //     .from("card-mapping")
