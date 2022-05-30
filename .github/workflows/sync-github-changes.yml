@@ -8,7 +8,7 @@ jobs:
     name: Project Card Updated
     steps:
       - name: Deploy Stage
-        uses: fjogeleit/http-request-action@v1
+        uses: fjogeleit/http-request-action@v1.9.1
         with:
           url: "http://locahost:3001/update-miro"
           method: "POST"
