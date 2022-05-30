@@ -7,8 +7,9 @@ const supabase = createClient(
 exports.handler = async function (event, context) {
   //   console.log("Event", event);
   //   console.log("Context", context);
+  const body = JSON.parse(event.body);
 
-  console.log("Body", event.body.gitHubIssueId);
+  console.log("Body", body);
 
   const { data, error } = await supabase
     .from("card-mappings")
