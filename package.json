@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "licence": "MIT",
   "scripts": {
-    "start": "concurrently \"vite\" \"nodemon server/index.js\"",
+    "start": "vite",
     "build": "vite build",
     "serve": "vite preview"
   },
