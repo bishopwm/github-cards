@@ -7,10 +7,17 @@ jobs:
     runs-on: ubuntu-latest
     name: Project Card Updated
     steps:
-      - name: Deploy Stage
+      - name: Update Miro
         uses: fjogeleit/http-request-action@v1.9.1
         with:
           url: "http://localhost:3001/update-miro"
           method: "POST"
-          customHeaders: '{"Content-Type": "application/json"}'
           data: '{"gitHubIssueId": "1"}'
+  refresh-feed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch API Data 📦
+        uses: JamesIves/fetch-api-data-action@v2.2.2
+        with:
+          endpoint: http://localhost:3001/update-mir0
+          configuration: '{ "method": "POST" }'
