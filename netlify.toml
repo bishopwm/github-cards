@@ -1,2 +1,2 @@
 [functions]
-  included_files = ["src/utils/*"]
+  included_files = ["src/utils/*.ts"]
