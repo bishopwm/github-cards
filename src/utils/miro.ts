@@ -1,6 +1,5 @@
 import { getStatusColor } from "./index";
 import { supabase } from "./index";
-// import { createClient } from "@supabase/supabase-js";
 
 interface MiroSelection {
   content: string;

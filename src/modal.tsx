@@ -74,7 +74,6 @@ function Modal() {
     if (gitHubColumns.length > 0) {
       gitHubColumns.map((column) => {
         fetchGitHubCards(column.id.toString()).then((cards) => {
-          // console.log(cards);
           setGitHubCards((previousState) => [...previousState, ...cards]);
         });
       });
@@ -151,6 +150,14 @@ function Modal() {
     });
   };
 
+  const test = async () => {
+    const { data, error } = await supabase
+      .from("card-mapping")
+      .select()
+      .eq("gitHubIssueId", 1226833640);
+    console.log(data, error);
+  };
+
   return (
     <div id={"modal-container"} className="wrapper">
       <h2>Choose from GitHub</h2>
@@ -186,7 +193,7 @@ function Modal() {
       <button
         className="button button-primary"
         type="button"
-        onClick={handleImportClick}
+        onClick={test}
         disabled={selectedGitHubIssues.length === 0}
       >
         Import
