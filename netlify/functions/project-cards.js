@@ -24,7 +24,8 @@ exports.handler = async function (event) {
 
   const { data, error } = await supabase
     .from("card-mapping")
-    .select("gitHubIssueId", gitHubProjectCardId);
+    .select()
+    .eq("gitHubIssueId", gitHubProjectCardId);
 
   // No Miro App Card Found
   if (error) {

@@ -22,7 +22,8 @@ exports.handler = async function (event) {
 
   const { data, error } = await supabase
     .from("card-mapping")
-    .select("gitHubIssueId", gitHubIssueId);
+    .select()
+    .eq("gitHubIssueId", gitHubIssueId);
 
   console.log(data, error);
 
