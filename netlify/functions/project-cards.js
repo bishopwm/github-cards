@@ -7,7 +7,7 @@
 import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
 
-import { fetchGitHubColumns } from "../../src/utils";
+const { fetchGitHubColumns } = require("../../src/utils");
 
 const supabase = createClient(
   process.env.VITE_DATABASE_URL,
