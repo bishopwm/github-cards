@@ -13,10 +13,12 @@ const supabase = createClient(
 );
 
 exports.handler = async function (event) {
+  // Get project card
   const body = JSON.parse(event.body);
-  const gitHubProjectCardId = body.gitHubProjectCard.id;
+  const gitHubProjectCard = body.gitHubProjectCard;
+  const gitHubProjectCardId = gitHubProjectCard.id;
 
-  console.log("Upated Project Card: ", body.gitHubProjectCard);
+  console.log("Upated Project Card: ", gitHubProjectCard);
 
   // Get column
 

@@ -16,48 +16,50 @@ exports.handler = async function (event) {
   // Get Issue
   const body = JSON.parse(event.body);
   const gitHubIssue = body.gitHubIssue;
-  console.log(gitHubIssue);
+  const gitHubIssueId = gitHubIssue.id;
 
-  //   const { data, error } = await supabase
-  //     .from("card-mapping")
-  //     .select("gitHubIssueId", gitHubProjectCardId);
+  console.log("Updated Issue: ", gitHubIssue);
 
-  // No Miro App Card Found
-  //   if (error) {
-  //     return {
-  //       statusCode: 200,
-  //       body: JSON.stringify({
-  //         message: "No Miro App Card found for this issue",
-  //       }),
-  //     };
-  //   }
+  const { data, error } = await supabase
+    .from("card-mapping")
+    .select("gitHubIssueId", gitHubIssueId);
+
+  //   No Miro App Card Found
+  if (error) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: "No Miro App Card found for this issue",
+      }),
+    };
+  }
 
   // Matching App Cards found
-  //   if (data) {
-  // const headers = {
-  //   Accept: "application/json",
-  //   "Content-Type": "application/json",
-  //   Authorization: `Bearer ${process.env.VITE_MIRO_API_TOKEN}`,
-  // };
-  // data.map((item) => {
-  //   axios
-  //     .patch(
-  //       `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
-  //       {
-  //         title: "Updated from Netlify Function",
-  //       },
-  //       {
-  //         headers: headers,
-  //       }
-  //     )
-  //     .then(function (response) {
-  //       res.json(response.data);
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // });
-  //   }
+  if (data) {
+    const headers = {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.VITE_MIRO_API_TOKEN}`,
+    };
+    data.map((item) => {
+      axios
+        .patch(
+          `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
+          {
+            title: "Updated from Netlify Function",
+          },
+          {
+            headers: headers,
+          }
+        )
+        .then(function (response) {
+          res.json(response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    });
+  }
 
   return {
     statusCode: 200,
