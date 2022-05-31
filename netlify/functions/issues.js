@@ -24,6 +24,8 @@ exports.handler = async function (event) {
     .from("card-mapping")
     .select("gitHubIssueId", gitHubIssueId);
 
+  console.log(data, error);
+
   //   No Miro App Card Found
   if (error) {
     return {
