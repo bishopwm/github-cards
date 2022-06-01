@@ -59,7 +59,7 @@ exports.handler = async function (event, context, callback) {
   // Matching App Cards found
   if (data) {
     const response = await fetch(
-      `https://api.miro.com/v2/boards/${item[0].miroBoardId}/app_cards/${item[0].miroAppCardId}`,
+      `https://api.miro.com/v2/boards/${data[0].miroBoardId}/app_cards/${data[0].miroAppCardId}`,
       options
     );
 

@@ -20917,12 +20917,12 @@ var require_iterate = __commonJS({
         callback(error, state.results);
       });
     }
-    function runJob(iterator, key, item2, callback) {
+    function runJob(iterator, key, item, callback) {
       var aborter;
       if (iterator.length == 2) {
-        aborter = iterator(item2, async(callback));
+        aborter = iterator(item, async(callback));
       } else {
-        aborter = iterator(item2, key, async(callback));
+        aborter = iterator(item, key, async(callback));
       }
       return aborter;
     }
@@ -27533,7 +27533,7 @@ exports.handler = async function(event, context, callback) {
     };
   }
   if (data) {
-    const response = await fetch2(`https://api.miro.com/v2/boards/${item[0].miroBoardId}/app_cards/${item[0].miroAppCardId}`, options);
+    const response = await fetch2(`https://api.miro.com/v2/boards/${data[0].miroBoardId}/app_cards/${data[0].miroAppCardId}`, options);
   }
   return {
     statusCode: 200,
