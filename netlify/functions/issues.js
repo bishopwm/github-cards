@@ -53,24 +53,41 @@ exports.handler = async function (event) {
         `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`
       );
 
-      axios
-        .patch(
-          `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
-          {
-            data: {
-              title: "Updated from Netlify Function",
-            },
+      const options = {
+        method: "PATCH",
+        headers: headers,
+        body: JSON.stringify({
+          data: {
+            title: "Updated from Netlify Function",
           },
-          {
-            headers: headers,
-          }
-        )
-        .then(function (response) {
-          res.json(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+        }),
+      };
+
+      fetch(
+        `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
+        options
+      )
+        .then((response) => response.json())
+        .then((response) => console.log(response))
+        .catch((err) => console.error(err));
+      //   axios
+      //     .patch(
+      //       `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
+      //   {
+      //     data: {
+      //       title: "Updated from Netlify Function",
+      //     },
+      //   },
+      //       {
+      //         headers: headers,
+      //       }
+      //     )
+      //     .then(function (response) {
+      //       res.json(response.data);
+      //     })
+      //     .catch(function (error) {
+      //       console.log(error);
+      //     });
     });
   }
 
