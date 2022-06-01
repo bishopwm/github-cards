@@ -6,7 +6,7 @@
 **/
 import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
-import fetch from "node-fetch";
+const fetch = require("node-fetch");
 
 const supabase = createClient(
   process.env.VITE_DATABASE_URL,
@@ -47,7 +47,7 @@ exports.handler = async function (event) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${process.env.VITE_MIRO_API_TOKEN}`,
     };
-    data.map((item) => {
+    data.map(async (item) => {
       console.log("Sending request to update: ", item);
       console.log(
         "request URL",
@@ -64,7 +64,7 @@ exports.handler = async function (event) {
         }),
       };
 
-      fetch(
+      await fetch(
         `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
         options
       )
