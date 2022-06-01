@@ -6,6 +6,7 @@
 **/
 import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
+import fetch from "node-fetch";
 
 const supabase = createClient(
   process.env.VITE_DATABASE_URL,
