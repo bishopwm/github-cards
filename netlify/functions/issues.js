@@ -18,7 +18,7 @@ exports.handler = async function (event) {
   const gitHubIssue = body.gitHubIssue;
   const gitHubIssueId = gitHubIssue.id;
 
-  console.log("Updated Issue: ", gitHubIssue);
+  //   console.log("Updated Issue: ", gitHubIssue);
 
   const { data, error } = await supabase
     .from("card-mapping")
@@ -47,6 +47,8 @@ exports.handler = async function (event) {
       Authorization: `Bearer ${process.env.VITE_MIRO_API_TOKEN}`,
     };
     data.map((item) => {
+      console.log("Sending request to update: ", item);
+
       axios
         .patch(
           `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,

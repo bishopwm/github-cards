@@ -20,7 +20,6 @@ import type {
   GitHubIssue,
 } from "./types";
 import { username, repo } from "./constants";
-import { supabase } from "./utils";
 
 function Modal() {
   // Store loading state of GitHub Cards
@@ -150,14 +149,6 @@ function Modal() {
     });
   };
 
-  const test = async () => {
-    const { data, error } = await supabase
-      .from("card-mapping")
-      .select()
-      .eq("gitHubIssueId", 1226833640);
-    console.log(data, error);
-  };
-
   return (
     <div id={"modal-container"} className="wrapper">
       <h2>Choose from GitHub</h2>
@@ -193,7 +184,7 @@ function Modal() {
       <button
         className="button button-primary"
         type="button"
-        onClick={test}
+        onClick={handleImportClick}
         disabled={selectedGitHubIssues.length === 0}
       >
         Import
