@@ -192,6 +192,32 @@ p {
 
 /* 
 
+  Input
+
+*/
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.input-label {
+  font-size: 14px;
+}
+
+.input-label span {
+  color: red;
+}
+
+.form-group {
+  width: 100%;
+  margin: 0;
+}
+
+/* 
+
   Checkbox
 
 */
@@ -220,7 +246,6 @@ p {
 /* 
 
   Color Picker
-
 */
 
 .circle-picker {
@@ -239,4 +264,24 @@ p {
   grid-column-start: checkbox-start;
   grid-column-end: end;
   grid-row-start: 5;
+}
+
+/* 
+
+  App Card Modal
+
+*/
+
+.appcard-modal-container {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#appcard-modal-button-container {
+  display: flex;
+  gap: 20px;
+  margin-top: 10px;
 }

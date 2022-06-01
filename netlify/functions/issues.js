@@ -5,7 +5,6 @@
 
 **/
 import { createClient } from "@supabase/supabase-js";
-import axios from "axios";
 import fetch from "node-fetch";
 
 const supabase = createClient(
@@ -91,9 +90,4 @@ exports.handler = async function (event, context, callback) {
       })
     );
   }
-
-  //   return {
-  //     statusCode: 200,
-  //     body: JSON.stringify({ message: "Issues Endpoint" }),
-  //   };
 };
