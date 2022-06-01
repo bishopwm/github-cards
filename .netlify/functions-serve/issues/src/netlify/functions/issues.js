@@ -27533,12 +27533,31 @@ exports.handler = async function(event, context, callback) {
     };
   }
   if (data) {
-    const response = await fetch2(`https://api.miro.com/v2/boards/${data[0].miroBoardId}/app_cards/${data[0].miroAppCardId}`, options);
+    await Promise.all(data.map(async (item) => {
+      return new Promise((resolve, reject) => {
+        fetch2(`https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`, options).then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            resolve({
+              statusCode: res.status || 500,
+              body: res.statusText
+            });
+          }
+        }).then((data2) => {
+          const response = {
+            statusCode: 200,
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(data2)
+          };
+          resolve(response);
+        }).catch((err) => {
+          console.log(err);
+          resolve({ statusCode: err.statusCode || 500, body: err.message });
+        });
+      });
+    }));
   }
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ message: "Issues Endpoint" })
-  };
 };
 /*!
  * mime-db
