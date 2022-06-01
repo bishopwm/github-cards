@@ -13,7 +13,7 @@ const supabase = createClient(
   process.env.VITE_DATABASE_PUBLIC_KEY
 );
 
-exports.handler = async function (event) {
+exports.handler = async function (event, context, callback) {
   // Get Issue
   const body = JSON.parse(event.body);
   const gitHubIssue = body.gitHubIssue;
@@ -59,46 +59,54 @@ exports.handler = async function (event) {
   // Matching App Cards found
   if (data) {
     data.map(async (item) => {
-      console.log("Sending request to update: ", item);
-      console.log(
-        "request URL",
-        `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`
-      );
-
-      return new Promise((resolve, reject) => {
-        fetch(
-          `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
-          options
-        )
-          .then((res) => {
-            if (res.ok) {
-              // res.status >= 200 && res.status < 300
-              return res.json();
-            } else {
-              resolve({ statusCode: res.status || 500, body: res.statusText });
-            }
-          })
-          .then((data) => {
-            const response = {
-              statusCode: 200,
-              headers: { "content-type": "application/json" },
-              body: JSON.stringify(data),
-            };
-            resolve(response);
-          })
-          .catch((err) => {
-            console.log(err);
-            resolve({ statusCode: err.statusCode || 500, body: err.message });
-          });
-      });
-
-      //   await fetch(
+      //   return new Promise((resolve, reject) => {
+      //   fetch(
       //     `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
       //     options
       //   )
-      //     .then((response) => response.json())
-      //     .then((response) => console.log(response))
-      //     .catch((err) => console.error(err));
+      //       .then((res) => {
+      //         if (res.ok) {
+      //           return res.json();
+      //         } else {
+      //           resolve({ statusCode: res.status || 500, body: res.statusText });
+      //         }
+      //       })
+      //       .then((data) => {
+      //         const response = {
+      //           statusCode: 200,
+      //           headers: { "content-type": "application/json" },
+      //           body: JSON.stringify(data),
+      //         };
+      //         resolve(response);
+      //       })
+      //       .catch((err) => {
+      //         console.log(err);
+      //         resolve({ statusCode: err.statusCode || 500, body: err.message });
+      //       });
+      //   });
+      const checkStatus = (res) => {
+        if (res.ok) {
+          // res.status >= 200 && res.status < 300
+          return res.json();
+        } else {
+          throw new Error(res.statusText);
+        }
+      };
+
+      try {
+        const response = await fetch(
+          `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
+          options
+        );
+        const data = await checkStatus(response);
+        callback(null, {
+          statusCode: 200,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+      } catch (error) {
+        callback(error);
+      }
     });
   }
 
