@@ -20917,12 +20917,12 @@ var require_iterate = __commonJS({
         callback(error, state.results);
       });
     }
-    function runJob(iterator, key, item, callback) {
+    function runJob(iterator, key, item2, callback) {
       var aborter;
       if (iterator.length == 2) {
-        aborter = iterator(item, async(callback));
+        aborter = iterator(item2, async(callback));
       } else {
-        aborter = iterator(item, key, async(callback));
+        aborter = iterator(item2, key, async(callback));
       }
       return aborter;
     }
@@ -27505,7 +27505,6 @@ function fixResponseChunkedTransferBadEnding(request, errorCallback) {
 // netlify/functions/issues.js
 var supabase = (0, import_supabase_js.createClient)(process.env.VITE_DATABASE_URL, process.env.VITE_DATABASE_PUBLIC_KEY);
 exports.handler = async function(event, context, callback) {
-  console.log("env", process.env.VITE_MIRO_API_TOKEN);
   const body = JSON.parse(event.body);
   const gitHubIssue = body.gitHubIssue;
   const gitHubIssueId = gitHubIssue.id;
@@ -27534,29 +27533,7 @@ exports.handler = async function(event, context, callback) {
     };
   }
   if (data) {
-    data.map(async (item) => {
-      const checkStatus = (res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          throw new Error(res.statusText);
-        }
-      };
-      try {
-        console.log("Sending request to: ", `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`);
-        const response = await fetch2(`https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`, options);
-        console.log("response", response);
-        const data2 = await checkStatus(response);
-        console.log("data", data2);
-        callback(null, {
-          statusCode: 200,
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data2)
-        });
-      } catch (error2) {
-        callback(error2);
-      }
-    });
+    const response = await fetch2(`https://api.miro.com/v2/boards/${item[0].miroBoardId}/app_cards/${item[0].miroAppCardId}`, options);
   }
   return {
     statusCode: 200,
