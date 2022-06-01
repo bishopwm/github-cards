@@ -1,9 +1,15 @@
 import * as React from "react";
 import ReactDOM from "react-dom";
 import { Input, Select } from "./components";
-import { fetchGitHubProjects, fetchGitHubColumns } from "./utils";
+import {
+  fetchGitHubProjects,
+  fetchGitHubColumns,
+  updateGitHubIssue,
+  updateGitHubProjectCard,
+} from "./utils";
 import type { GitHubProject, GitHubColumns } from "./types";
 import { username, repo } from "./constants";
+import { supabase } from "./utils";
 
 function App() {
   const [appCardId, setAppCardId] = React.useState("");
@@ -32,6 +38,9 @@ function App() {
     name: "",
     id: 0,
   });
+
+  const [newTitle, setNewTitle] = React.useState("");
+  const [newDescription, setNewDescription] = React.useState("");
 
   // Get and store appCardId from window location
   React.useEffect(() => {
@@ -74,6 +83,15 @@ function App() {
     }
   }, [gitHubProjects]);
 
+  const handleSaveClick = () => {
+    console.log(updateGitHubIssue);
+    console.log(updateGitHubProjectCard);
+  };
+
+  const handleCancelClick = async () => {
+    await miro.board.ui.closeModal();
+  };
+
   return (
     <div className="appcard-modal-container">
       <h1>Edit GitHub Card</h1>
@@ -93,19 +111,22 @@ function App() {
         label="Title"
         required={true}
         placeholder={"Title"}
-        onChange={(value) => {}}
+        onChange={(value) => setNewTitle(value)}
       />
       <Input
         label="Description"
         required={true}
         placeholder={"Description"}
-        onChange={(value) => {}}
+        onChange={(value) => setNewDescription(value)}
       />
       <div id={"appcard-modal-button-container"}>
-        <button className={"button button-primary"} onClick={() => {}}>
+        <button className={"button button-primary"} onClick={handleSaveClick}>
           Save
         </button>
-        <button className={"button button-secondary"} onClick={() => {}}>
+        <button
+          className={"button button-secondary"}
+          onClick={handleCancelClick}
+        >
           Cancel
         </button>
       </div>
