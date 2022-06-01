@@ -14,6 +14,8 @@ const supabase = createClient(
 );
 
 exports.handler = async function (event, context, callback) {
+  console.log("env", process.env.VITE_MIRO_API_TOKEN);
+
   // Get Issue
   const body = JSON.parse(event.body);
   const gitHubIssue = body.gitHubIssue;
@@ -98,8 +100,6 @@ exports.handler = async function (event, context, callback) {
           "Sending request to: ",
           `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`
         );
-
-        console.log("env", process.env.VITE_MIRO_API_TOKEN);
 
         const response = await fetch(
           `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
