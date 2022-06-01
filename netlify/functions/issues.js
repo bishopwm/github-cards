@@ -94,6 +94,11 @@ exports.handler = async function (event, context, callback) {
       };
 
       try {
+        console.log(
+          "Sending request to: ",
+          `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`
+        );
+
         const response = await fetch(
           `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
           options

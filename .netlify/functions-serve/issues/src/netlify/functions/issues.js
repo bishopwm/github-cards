@@ -2614,14 +2614,14 @@ var require_lib2 = __commonJS({
         }
         return this[MAP][key].join(", ");
       }
-      forEach(callback2) {
+      forEach(callback) {
         let thisArg = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : void 0;
         let pairs = getHeaders(this);
         let i2 = 0;
         while (i2 < pairs.length) {
           var _pairs$i = pairs[i2];
           const name = _pairs$i[0], value = _pairs$i[1];
-          callback2.call(thisArg, value, name, this);
+          callback.call(thisArg, value, name, this);
           pairs = getHeaders(this);
           i2++;
         }
@@ -4171,12 +4171,12 @@ var require_GoTrueClient = __commonJS({
           return { error: null };
         });
       }
-      onAuthStateChange(callback2) {
+      onAuthStateChange(callback) {
         try {
           const id = (0, helpers_1.uuid)();
           const subscription = {
             id,
-            callback: callback2,
+            callback,
             unsubscribe: () => {
               this.stateChangeEmitters.delete(id);
             }
@@ -7682,14 +7682,14 @@ var require_WebSocketRouter = __commonJS({
         throw new Error("Cannot detach from server: not attached.");
       }
     };
-    WebSocketRouter.prototype.mount = function(path, protocol, callback2) {
+    WebSocketRouter.prototype.mount = function(path, protocol, callback) {
       if (!path) {
         throw new Error("You must specify a path for this handler.");
       }
       if (!protocol) {
         protocol = "____no_protocol____";
       }
-      if (!callback2) {
+      if (!callback) {
         throw new Error("You must specify a callback for this handler.");
       }
       path = this.pathToRegExp(path);
@@ -7705,7 +7705,7 @@ var require_WebSocketRouter = __commonJS({
         "path": path,
         "pathString": pathString,
         "protocol": protocol,
-        "callback": callback2
+        "callback": callback
       });
     };
     WebSocketRouter.prototype.unmount = function(path, protocol) {
@@ -8277,12 +8277,12 @@ var require_timer = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     var Timer = class {
-      constructor(callback2, timerCalc) {
-        this.callback = callback2;
+      constructor(callback, timerCalc) {
+        this.callback = callback;
         this.timerCalc = timerCalc;
         this.timer = void 0;
         this.tries = 0;
-        this.callback = callback2;
+        this.callback = callback;
         this.timerCalc = timerCalc;
       }
       reset() {
@@ -8310,14 +8310,14 @@ var require_serializer = __commonJS({
       constructor() {
         this.HEADER_LENGTH = 1;
       }
-      decode(rawPayload, callback2) {
+      decode(rawPayload, callback) {
         if (rawPayload.constructor === ArrayBuffer) {
-          return callback2(this._binaryDecode(rawPayload));
+          return callback(this._binaryDecode(rawPayload));
         }
         if (typeof rawPayload === "string") {
-          return callback2(JSON.parse(rawPayload));
+          return callback(JSON.parse(rawPayload));
         }
-        return callback2({});
+        return callback({});
       }
       _binaryDecode(buffer) {
         const view = new DataView(buffer);
@@ -8388,12 +8388,12 @@ var require_push = __commonJS({
       updatePayload(payload) {
         this.payload = Object.assign(Object.assign({}, this.payload), payload);
       }
-      receive(status, callback2) {
+      receive(status, callback) {
         var _a4;
         if (this._hasReceived(status)) {
-          callback2((_a4 = this.receivedResp) === null || _a4 === void 0 ? void 0 : _a4.response);
+          callback((_a4 = this.receivedResp) === null || _a4 === void 0 ? void 0 : _a4.response);
         }
-        this.recHooks.push({ status, callback: callback2 });
+        this.recHooks.push({ status, callback });
         return this;
       }
       startTimeout() {
@@ -8402,16 +8402,16 @@ var require_push = __commonJS({
         }
         this.ref = this.channel.socket.makeRef();
         this.refEvent = this.channel.replyEventName(this.ref);
-        const callback2 = (payload) => {
+        const callback = (payload) => {
           this._cancelRefEvent();
           this._cancelTimeout();
           this.receivedResp = payload;
           this._matchReceive(payload);
         };
         if (this.channel instanceof RealtimeSubscription_1.default) {
-          this.channel.on(this.refEvent, callback2);
+          this.channel.on(this.refEvent, callback);
         } else {
-          this.channel.on(this.refEvent, {}, callback2);
+          this.channel.on(this.refEvent, {}, callback);
         }
         this.timeoutTimer = setTimeout(() => {
           this.trigger("timeout", {});
@@ -8520,14 +8520,14 @@ var require_RealtimeSubscription = __commonJS({
           return this.joinPush;
         }
       }
-      onClose(callback2) {
-        this.on(constants_1.CHANNEL_EVENTS.close, callback2);
+      onClose(callback) {
+        this.on(constants_1.CHANNEL_EVENTS.close, callback);
       }
-      onError(callback2) {
-        this.on(constants_1.CHANNEL_EVENTS.error, (reason) => callback2(reason));
+      onError(callback) {
+        this.on(constants_1.CHANNEL_EVENTS.error, (reason) => callback(reason));
       }
-      on(event, callback2) {
-        this.bindings.push({ event, callback: callback2 });
+      on(event, callback) {
+        this.bindings.push({ event, callback });
       }
       off(event) {
         this.bindings = this.bindings.filter((bind) => bind.event !== event);
@@ -8761,14 +8761,14 @@ var require_RealtimePresence = __commonJS({
       static cloneDeep(obj) {
         return JSON.parse(JSON.stringify(obj));
       }
-      onJoin(callback2) {
-        this.caller.onJoin = callback2;
+      onJoin(callback) {
+        this.caller.onJoin = callback;
       }
-      onLeave(callback2) {
-        this.caller.onLeave = callback2;
+      onLeave(callback) {
+        this.caller.onLeave = callback;
       }
-      onSync(callback2) {
-        this.caller.onSync = callback2;
+      onSync(callback) {
+        this.caller.onSync = callback;
       }
       list(by) {
         return RealtimePresence.list(this.state, by);
@@ -8872,17 +8872,17 @@ var require_RealtimeChannel = __commonJS({
           return this.joinPush;
         }
       }
-      onClose(callback2) {
-        this.on(constants_1.CHANNEL_EVENTS.close, {}, callback2);
+      onClose(callback) {
+        this.on(constants_1.CHANNEL_EVENTS.close, {}, callback);
       }
-      onError(callback2) {
-        this.on(constants_1.CHANNEL_EVENTS.error, {}, (reason) => callback2(reason));
+      onError(callback) {
+        this.on(constants_1.CHANNEL_EVENTS.error, {}, (reason) => callback(reason));
       }
-      on(type, filter, callback2) {
+      on(type, filter, callback) {
         this.bindings.push({
           type,
           filter: filter !== null && filter !== void 0 ? filter : {},
-          callback: callback2 !== null && callback2 !== void 0 ? callback2 : () => {
+          callback: callback !== null && callback !== void 0 ? callback : () => {
           }
         });
       }
@@ -9095,8 +9095,8 @@ var require_RealtimeClient = __commonJS({
         this.reconnectAfterMs = (options === null || options === void 0 ? void 0 : options.reconnectAfterMs) ? options.reconnectAfterMs : (tries) => {
           return [1e3, 2e3, 5e3, 1e4][tries - 1] || 1e4;
         };
-        this.encode = (options === null || options === void 0 ? void 0 : options.encode) ? options.encode : (payload, callback2) => {
-          return callback2(JSON.stringify(payload));
+        this.encode = (options === null || options === void 0 ? void 0 : options.encode) ? options.encode : (payload, callback) => {
+          return callback(JSON.stringify(payload));
         };
         this.decode = (options === null || options === void 0 ? void 0 : options.decode) ? options.decode : this.serializer.decode.bind(this.serializer);
         this.reconnectTimer = new timer_1.default(() => __awaiter(this, void 0, void 0, function* () {
@@ -9141,17 +9141,17 @@ var require_RealtimeClient = __commonJS({
       log(kind, msg, data) {
         this.logger(kind, msg, data);
       }
-      onOpen(callback2) {
-        this.stateChangeCallbacks.open.push(callback2);
+      onOpen(callback) {
+        this.stateChangeCallbacks.open.push(callback);
       }
-      onClose(callback2) {
-        this.stateChangeCallbacks.close.push(callback2);
+      onClose(callback) {
+        this.stateChangeCallbacks.close.push(callback);
       }
-      onError(callback2) {
-        this.stateChangeCallbacks.error.push(callback2);
+      onError(callback) {
+        this.stateChangeCallbacks.error.push(callback);
       }
-      onMessage(callback2) {
-        this.stateChangeCallbacks.message.push(callback2);
+      onMessage(callback) {
+        this.stateChangeCallbacks.message.push(callback);
       }
       connectionState() {
         switch (this.conn && this.conn.readyState) {
@@ -9204,7 +9204,7 @@ var require_RealtimeClient = __commonJS({
       }
       push(data) {
         const { topic, event, payload, ref } = data;
-        let callback2 = () => {
+        let callback = () => {
           this.encode(data, (result) => {
             var _a4;
             (_a4 = this.conn) === null || _a4 === void 0 ? void 0 : _a4.send(result);
@@ -9212,9 +9212,9 @@ var require_RealtimeClient = __commonJS({
         };
         this.log("push", `${topic} ${event} (${ref})`, payload);
         if (this.isConnected()) {
-          callback2();
+          callback();
         } else {
-          this.sendBuffer.push(callback2);
+          this.sendBuffer.push(callback);
         }
       }
       onConnMessage(rawMessage) {
@@ -9225,7 +9225,7 @@ var require_RealtimeClient = __commonJS({
           }
           this.log("receive", `${payload.status || ""} ${topic} ${event} ${ref && "(" + ref + ")" || ""}`, payload);
           this.channels.filter((channel) => channel.isMember(topic)).forEach((channel) => channel.trigger(event, payload, ref));
-          this.stateChangeCallbacks.message.forEach((callback2) => callback2(msg));
+          this.stateChangeCallbacks.message.forEach((callback) => callback(msg));
         });
       }
       endPointURL() {
@@ -9262,19 +9262,19 @@ var require_RealtimeClient = __commonJS({
         this.reconnectTimer.reset();
         this.heartbeatTimer && clearInterval(this.heartbeatTimer);
         this.heartbeatTimer = setInterval(() => this._sendHeartbeat(), this.heartbeatIntervalMs);
-        this.stateChangeCallbacks.open.forEach((callback2) => callback2());
+        this.stateChangeCallbacks.open.forEach((callback) => callback());
       }
       _onConnClose(event) {
         this.log("transport", "close", event);
         this._triggerChanError();
         this.heartbeatTimer && clearInterval(this.heartbeatTimer);
         this.reconnectTimer.scheduleTimeout();
-        this.stateChangeCallbacks.close.forEach((callback2) => callback2(event));
+        this.stateChangeCallbacks.close.forEach((callback) => callback(event));
       }
       _onConnError(error) {
         this.log("transport", error.message);
         this._triggerChanError();
-        this.stateChangeCallbacks.error.forEach((callback2) => callback2(error));
+        this.stateChangeCallbacks.error.forEach((callback) => callback(error));
       }
       _triggerChanError() {
         this.channels.forEach((channel) => channel.trigger(constants_1.CHANNEL_EVENTS.error));
@@ -9289,7 +9289,7 @@ var require_RealtimeClient = __commonJS({
       }
       _flushSendBuffer() {
         if (this.isConnected() && this.sendBuffer.length > 0) {
-          this.sendBuffer.forEach((callback2) => callback2());
+          this.sendBuffer.forEach((callback) => callback());
           this.sendBuffer = [];
         }
       }
@@ -9398,7 +9398,7 @@ var require_SupabaseRealtimeClient = __commonJS({
         }
         return records;
       }
-      on(event, callback2) {
+      on(event, callback) {
         this.subscription.on(event, (payload) => {
           let enrichedPayload = {
             schema: payload.schema,
@@ -9410,15 +9410,15 @@ var require_SupabaseRealtimeClient = __commonJS({
             errors: payload.errors
           };
           enrichedPayload = Object.assign(Object.assign({}, enrichedPayload), this.getPayloadRecords(payload));
-          callback2(enrichedPayload);
+          callback(enrichedPayload);
         });
         return this;
       }
-      subscribe(callback2 = () => {
+      subscribe(callback = () => {
       }) {
-        this.subscription.onError((e2) => callback2("SUBSCRIPTION_ERROR", e2));
-        this.subscription.onClose(() => callback2("CLOSED"));
-        this.subscription.subscribe().receive("ok", () => callback2("SUBSCRIBED")).receive("error", (e2) => callback2("SUBSCRIPTION_ERROR", e2)).receive("timeout", () => callback2("RETRYING_AFTER_TIMEOUT"));
+        this.subscription.onError((e2) => callback("SUBSCRIPTION_ERROR", e2));
+        this.subscription.onClose(() => callback("CLOSED"));
+        this.subscription.subscribe().receive("ok", () => callback("SUBSCRIBED")).receive("error", (e2) => callback("SUBSCRIPTION_ERROR", e2)).receive("timeout", () => callback("RETRYING_AFTER_TIMEOUT"));
         return this.subscription;
       }
     };
@@ -9443,14 +9443,14 @@ var require_SupabaseQueryBuilder = __commonJS({
         this._schema = schema;
         this._table = table;
       }
-      on(event, callback2) {
+      on(event, callback) {
         if (!this._realtime.isConnected()) {
           this._realtime.connect();
         }
         if (!this._subscription) {
           this._subscription = new SupabaseRealtimeClient_1.SupabaseRealtimeClient(this._realtime, this._headers, this._schema, this._table);
         }
-        return this._subscription.on(event, callback2);
+        return this._subscription.on(event, callback);
       }
     };
     exports2.SupabaseQueryBuilder = SupabaseQueryBuilder;
@@ -11280,7 +11280,7 @@ var require_follow_redirects = __commonJS({
       abortRequest(this._currentRequest);
       this.emit("abort");
     };
-    RedirectableRequest.prototype.write = function(data, encoding, callback2) {
+    RedirectableRequest.prototype.write = function(data, encoding, callback) {
       if (this._ending) {
         throw new WriteAfterEndError();
       }
@@ -11288,41 +11288,41 @@ var require_follow_redirects = __commonJS({
         throw new TypeError("data should be a string, Buffer or Uint8Array");
       }
       if (typeof encoding === "function") {
-        callback2 = encoding;
+        callback = encoding;
         encoding = null;
       }
       if (data.length === 0) {
-        if (callback2) {
-          callback2();
+        if (callback) {
+          callback();
         }
         return;
       }
       if (this._requestBodyLength + data.length <= this._options.maxBodyLength) {
         this._requestBodyLength += data.length;
         this._requestBodyBuffers.push({ data, encoding });
-        this._currentRequest.write(data, encoding, callback2);
+        this._currentRequest.write(data, encoding, callback);
       } else {
         this.emit("error", new MaxBodyLengthExceededError());
         this.abort();
       }
     };
-    RedirectableRequest.prototype.end = function(data, encoding, callback2) {
+    RedirectableRequest.prototype.end = function(data, encoding, callback) {
       if (typeof data === "function") {
-        callback2 = data;
+        callback = data;
         data = encoding = null;
       } else if (typeof encoding === "function") {
-        callback2 = encoding;
+        callback = encoding;
         encoding = null;
       }
       if (!data) {
         this._ended = this._ending = true;
-        this._currentRequest.end(null, null, callback2);
+        this._currentRequest.end(null, null, callback);
       } else {
         var self2 = this;
         var currentRequest = this._currentRequest;
         this.write(data, encoding, function() {
           self2._ended = true;
-          currentRequest.end(null, null, callback2);
+          currentRequest.end(null, null, callback);
         });
         this._ending = true;
       }
@@ -11335,7 +11335,7 @@ var require_follow_redirects = __commonJS({
       delete this._options.headers[name];
       this._currentRequest.removeHeader(name);
     };
-    RedirectableRequest.prototype.setTimeout = function(msecs, callback2) {
+    RedirectableRequest.prototype.setTimeout = function(msecs, callback) {
       var self2 = this;
       function destroyOnTimeout(socket) {
         socket.setTimeout(msecs);
@@ -11360,15 +11360,15 @@ var require_follow_redirects = __commonJS({
         self2.removeListener("abort", clearTimer);
         self2.removeListener("error", clearTimer);
         self2.removeListener("response", clearTimer);
-        if (callback2) {
-          self2.removeListener("timeout", callback2);
+        if (callback) {
+          self2.removeListener("timeout", callback);
         }
         if (!self2.socket) {
           self2._currentRequest.removeListener("socket", startTimer);
         }
       }
-      if (callback2) {
-        this.on("timeout", callback2);
+      if (callback) {
+        this.on("timeout", callback);
       }
       if (this.socket) {
         startTimer(this.socket);
@@ -11543,7 +11543,7 @@ var require_follow_redirects = __commonJS({
         var protocol = scheme + ":";
         var nativeProtocol = nativeProtocols[protocol] = protocols[scheme];
         var wrappedProtocol = exports3[scheme] = Object.create(nativeProtocol);
-        function request(input, options, callback2) {
+        function request(input, options, callback) {
           if (typeof input === "string") {
             var urlStr = input;
             try {
@@ -11554,12 +11554,12 @@ var require_follow_redirects = __commonJS({
           } else if (URL2 && input instanceof URL2) {
             input = urlToOptions(input);
           } else {
-            callback2 = options;
+            callback = options;
             options = input;
             input = { protocol };
           }
           if (typeof options === "function") {
-            callback2 = options;
+            callback = options;
             options = null;
           }
           options = Object.assign({
@@ -11569,10 +11569,10 @@ var require_follow_redirects = __commonJS({
           options.nativeProtocols = nativeProtocols;
           assert.equal(options.protocol, protocol, "protocol mismatch");
           debug("options", options);
-          return new RedirectableRequest(options, callback2);
+          return new RedirectableRequest(options, callback);
         }
-        function get(input, options, callback2) {
-          var wrappedRequest = wrappedProtocol.request(input, options, callback2);
+        function get(input, options, callback) {
+          var wrappedRequest = wrappedProtocol.request(input, options, callback);
           wrappedRequest.end();
           return wrappedRequest;
         }
@@ -20862,17 +20862,17 @@ var require_async = __commonJS({
   "node_modules/asynckit/lib/async.js"(exports2, module2) {
     var defer = require_defer();
     module2.exports = async;
-    function async(callback2) {
+    function async(callback) {
       var isAsync = false;
       defer(function() {
         isAsync = true;
       });
       return function async_callback(err, result) {
         if (isAsync) {
-          callback2(err, result);
+          callback(err, result);
         } else {
           defer(function nextTick_callback() {
-            callback2(err, result);
+            callback(err, result);
           });
         }
       };
@@ -20902,7 +20902,7 @@ var require_iterate = __commonJS({
     var async = require_async();
     var abort = require_abort();
     module2.exports = iterate;
-    function iterate(list, iterator, state, callback2) {
+    function iterate(list, iterator, state, callback) {
       var key = state["keyedList"] ? state["keyedList"][state.index] : state.index;
       state.jobs[key] = runJob(iterator, key, list[key], function(error, output) {
         if (!(key in state.jobs)) {
@@ -20914,15 +20914,15 @@ var require_iterate = __commonJS({
         } else {
           state.results[key] = output;
         }
-        callback2(error, state.results);
+        callback(error, state.results);
       });
     }
-    function runJob(iterator, key, item, callback2) {
+    function runJob(iterator, key, item, callback) {
       var aborter;
       if (iterator.length == 2) {
-        aborter = iterator(item, async(callback2));
+        aborter = iterator(item, async(callback));
       } else {
-        aborter = iterator(item, key, async(callback2));
+        aborter = iterator(item, key, async(callback));
       }
       return aborter;
     }
@@ -20957,13 +20957,13 @@ var require_terminator = __commonJS({
     var abort = require_abort();
     var async = require_async();
     module2.exports = terminator;
-    function terminator(callback2) {
+    function terminator(callback) {
       if (!Object.keys(this.jobs).length) {
         return;
       }
       this.index = this.size;
       abort(this);
-      async(callback2)(null, this.results);
+      async(callback)(null, this.results);
     }
   }
 });
@@ -20975,22 +20975,22 @@ var require_parallel = __commonJS({
     var initState = require_state();
     var terminator = require_terminator();
     module2.exports = parallel;
-    function parallel(list, iterator, callback2) {
+    function parallel(list, iterator, callback) {
       var state = initState(list);
       while (state.index < (state["keyedList"] || list).length) {
         iterate(list, iterator, state, function(error, result) {
           if (error) {
-            callback2(error, result);
+            callback(error, result);
             return;
           }
           if (Object.keys(state.jobs).length === 0) {
-            callback2(null, state.results);
+            callback(null, state.results);
             return;
           }
         });
         state.index++;
       }
-      return terminator.bind(state, callback2);
+      return terminator.bind(state, callback);
     }
   }
 });
@@ -21004,11 +21004,11 @@ var require_serialOrdered = __commonJS({
     module2.exports = serialOrdered;
     module2.exports.ascending = ascending;
     module2.exports.descending = descending;
-    function serialOrdered(list, iterator, sortMethod, callback2) {
+    function serialOrdered(list, iterator, sortMethod, callback) {
       var state = initState(list, sortMethod);
       iterate(list, iterator, state, function iteratorHandler(error, result) {
         if (error) {
-          callback2(error, result);
+          callback(error, result);
           return;
         }
         state.index++;
@@ -21016,9 +21016,9 @@ var require_serialOrdered = __commonJS({
           iterate(list, iterator, state, iteratorHandler);
           return;
         }
-        callback2(null, state.results);
+        callback(null, state.results);
       });
-      return terminator.bind(state, callback2);
+      return terminator.bind(state, callback);
     }
     function ascending(a, b) {
       return a < b ? -1 : a > b ? 1 : 0;
@@ -21034,8 +21034,8 @@ var require_serial = __commonJS({
   "node_modules/asynckit/serial.js"(exports2, module2) {
     var serialOrdered = require_serialOrdered();
     module2.exports = serial;
-    function serial(list, iterator, callback2) {
-      return serialOrdered(list, iterator, null, callback2);
+    function serial(list, iterator, callback) {
+      return serialOrdered(list, iterator, null, callback);
     }
   }
 });
@@ -21132,31 +21132,31 @@ var require_form_data = __commonJS({
         this._valuesToMeasure.push(value);
       }
     };
-    FormData3.prototype._lengthRetriever = function(value, callback2) {
+    FormData3.prototype._lengthRetriever = function(value, callback) {
       if (value.hasOwnProperty("fd")) {
         if (value.end != void 0 && value.end != Infinity && value.start != void 0) {
-          callback2(null, value.end + 1 - (value.start ? value.start : 0));
+          callback(null, value.end + 1 - (value.start ? value.start : 0));
         } else {
           fs2.stat(value.path, function(err, stat2) {
             var fileSize;
             if (err) {
-              callback2(err);
+              callback(err);
               return;
             }
             fileSize = stat2.size - (value.start ? value.start : 0);
-            callback2(null, fileSize);
+            callback(null, fileSize);
           });
         }
       } else if (value.hasOwnProperty("httpVersion")) {
-        callback2(null, +value.headers["content-length"]);
+        callback(null, +value.headers["content-length"]);
       } else if (value.hasOwnProperty("httpModule")) {
         value.on("response", function(response) {
           value.pause();
-          callback2(null, +response.headers["content-length"]);
+          callback(null, +response.headers["content-length"]);
         });
         value.resume();
       } else {
-        callback2("Unknown stream");
+        callback("Unknown stream");
       }
     };
     FormData3.prototype._multiPartHeader = function(field, value, options) {
@@ -21351,13 +21351,13 @@ var require_form_data = __commonJS({
         this.pipe(request);
         if (cb) {
           var onResponse;
-          var callback2 = function(error, responce) {
-            request.removeListener("error", callback2);
+          var callback = function(error, responce) {
+            request.removeListener("error", callback);
             request.removeListener("response", onResponse);
             return cb.call(this, error, responce);
           };
-          onResponse = callback2.bind(this, null);
-          request.on("error", callback2);
+          onResponse = callback.bind(this, null);
+          request.on("error", callback);
           request.on("response", onResponse);
         }
       }.bind(this));
@@ -21912,9 +21912,9 @@ var require_CancelToken = __commonJS({
 var require_spread = __commonJS({
   "node_modules/axios/lib/helpers/spread.js"(exports2, module2) {
     "use strict";
-    module2.exports = function spread(callback2) {
+    module2.exports = function spread(callback) {
       return function wrap(arr) {
-        return callback2.apply(null, arr);
+        return callback.apply(null, arr);
       };
     };
   }
@@ -22105,7 +22105,7 @@ var require_ponyfill_es2018 = __commonJS({
           elements[oldCursor] = void 0;
           return element;
         }
-        forEach(callback2) {
+        forEach(callback) {
           let i2 = this._cursor;
           let node = this._front;
           let elements = node._elements;
@@ -22118,7 +22118,7 @@ var require_ponyfill_es2018 = __commonJS({
                 break;
               }
             }
-            callback2(elements[i2]);
+            callback(elements[i2]);
             ++i2;
           }
         }
@@ -26144,7 +26144,7 @@ var init_multipart_parser = __esm({
         const clear = (name) => {
           delete this[name + "Mark"];
         };
-        const callback2 = (callbackSymbol, start, end, ui8a) => {
+        const callback = (callbackSymbol, start, end, ui8a) => {
           if (start === void 0 || start !== end) {
             this[callbackSymbol](ui8a && ui8a.subarray(start, end));
           }
@@ -26155,10 +26155,10 @@ var init_multipart_parser = __esm({
             return;
           }
           if (clear2) {
-            callback2(name, this[markSymbol], i2, data);
+            callback(name, this[markSymbol], i2, data);
             delete this[markSymbol];
           } else {
-            callback2(name, this[markSymbol], data.length, data);
+            callback(name, this[markSymbol], data.length, data);
             this[markSymbol] = 0;
           }
         };
@@ -26180,7 +26180,7 @@ var init_multipart_parser = __esm({
                   flags = 0;
                 } else if (!(flags & F.LAST_BOUNDARY) && c === LF) {
                   index = 0;
-                  callback2("onPartBegin");
+                  callback("onPartBegin");
                   state = S.HEADER_FIELD_START;
                 } else {
                   return;
@@ -26230,7 +26230,7 @@ var init_multipart_parser = __esm({
             case S.HEADER_VALUE:
               if (c === CR) {
                 dataCallback("onHeaderValue", true);
-                callback2("onHeaderEnd");
+                callback("onHeaderEnd");
                 state = S.HEADER_VALUE_ALMOST_DONE;
               }
               break;
@@ -26244,7 +26244,7 @@ var init_multipart_parser = __esm({
               if (c !== LF) {
                 return;
               }
-              callback2("onHeadersEnd");
+              callback("onHeadersEnd");
               state = S.PART_DATA_START;
               break;
             case S.PART_DATA_START:
@@ -26283,14 +26283,14 @@ var init_multipart_parser = __esm({
                   index = 0;
                   if (c === LF) {
                     flags &= ~F.PART_BOUNDARY;
-                    callback2("onPartEnd");
-                    callback2("onPartBegin");
+                    callback("onPartEnd");
+                    callback("onPartBegin");
                     state = S.HEADER_FIELD_START;
                     break;
                   }
                 } else if (flags & F.LAST_BOUNDARY) {
                   if (c === HYPHEN) {
-                    callback2("onPartEnd");
+                    callback("onPartEnd");
                     state = S.END;
                     flags = 0;
                   } else {
@@ -26304,7 +26304,7 @@ var init_multipart_parser = __esm({
                 lookbehind[index - 1] = c;
               } else if (previousIndex > 0) {
                 const _lookbehind = new Uint8Array(lookbehind.buffer, lookbehind.byteOffset, lookbehind.byteLength);
-                callback2("onPartData", 0, previousIndex, _lookbehind);
+                callback("onPartData", 0, previousIndex, _lookbehind);
                 previousIndex = 0;
                 mark("onPartData");
                 i2--;
@@ -26746,9 +26746,9 @@ var Headers = class extends URLSearchParams {
     }
     return value;
   }
-  forEach(callback2, thisArg = void 0) {
+  forEach(callback, thisArg = void 0) {
     for (const name of this.keys()) {
-      Reflect.apply(callback2, thisArg, [this.get(name), name, this]);
+      Reflect.apply(callback, thisArg, [this.get(name), name, this]);
     }
   }
   *values() {
@@ -27504,7 +27504,7 @@ function fixResponseChunkedTransferBadEnding(request, errorCallback) {
 
 // netlify/functions/issues.js
 var supabase = (0, import_supabase_js.createClient)(process.env.VITE_DATABASE_URL, process.env.VITE_DATABASE_PUBLIC_KEY);
-exports.handler = async function(event) {
+exports.handler = async function(event, context, callback) {
   const body = JSON.parse(event.body);
   const gitHubIssue = body.gitHubIssue;
   const gitHubIssueId = gitHubIssue.id;
