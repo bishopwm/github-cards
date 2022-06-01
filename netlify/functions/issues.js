@@ -19,14 +19,32 @@ exports.handler = async function (event) {
   const gitHubIssue = body.gitHubIssue;
   const gitHubIssueId = gitHubIssue.id;
 
+  //   Request Headers
+  const headers = {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${process.env.VITE_MIRO_API_TOKEN}`,
+  };
+
+  //   Request body
+  const options = {
+    method: "PATCH",
+    headers: headers,
+    body: JSON.stringify({
+      data: {
+        title: gitHubIssue.title,
+        description: gitHubIssue.body,
+      },
+    }),
+  };
+
+  //   Get card mappings from database
   const { data, error } = await supabase
     .from("card-mapping")
     .select(
       "id, miroAppCardId::text, gitHubIssueId, miroUserId::text, gitHubUsername, created_at, miroBoardId"
     )
     .eq("gitHubIssueId", gitHubIssueId);
-
-  console.log(data, error);
 
   //   No Miro App Card Found
   if (error) {
@@ -40,11 +58,6 @@ exports.handler = async function (event) {
 
   // Matching App Cards found
   if (data) {
-    const headers = {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.VITE_MIRO_API_TOKEN}`,
-    };
     data.map(async (item) => {
       console.log("Sending request to update: ", item);
       console.log(
@@ -52,41 +65,40 @@ exports.handler = async function (event) {
         `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`
       );
 
-      const options = {
-        method: "PATCH",
-        headers: headers,
-        body: JSON.stringify({
-          data: {
-            title: "Updated from Netlify Function",
-          },
-        }),
-      };
+      return new Promise((resolve, reject) => {
+        fetch(
+          `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
+          options
+        )
+          .then((res) => {
+            if (res.ok) {
+              // res.status >= 200 && res.status < 300
+              return res.json();
+            } else {
+              resolve({ statusCode: res.status || 500, body: res.statusText });
+            }
+          })
+          .then((data) => {
+            const response = {
+              statusCode: 200,
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify(data),
+            };
+            resolve(response);
+          })
+          .catch((err) => {
+            console.log(err);
+            resolve({ statusCode: err.statusCode || 500, body: err.message });
+          });
+      });
 
-      await fetch(
-        `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
-        options
-      )
-        .then((response) => response.json())
-        .then((response) => console.log(response))
-        .catch((err) => console.error(err));
-      //   axios
-      //     .patch(
-      //       `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
-      //   {
-      //     data: {
-      //       title: "Updated from Netlify Function",
-      //     },
-      //   },
-      //       {
-      //         headers: headers,
-      //       }
-      //     )
-      //     .then(function (response) {
-      //       res.json(response.data);
-      //     })
-      //     .catch(function (error) {
-      //       console.log(error);
-      //     });
+      //   await fetch(
+      //     `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
+      //     options
+      //   )
+      //     .then((response) => response.json())
+      //     .then((response) => console.log(response))
+      //     .catch((err) => console.error(err));
     });
   }
 
