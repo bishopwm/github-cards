@@ -27542,8 +27542,12 @@ exports.handler = async function(event, context, callback) {
         }
       };
       try {
+        console.log("Sending request to: ", `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`);
+        console.log("env", process.env.VITE_MIRO_API_TOKEN);
         const response = await fetch2(`https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`, options);
+        console.log("response", response);
         const data2 = await checkStatus(response);
+        console.log("data", data2);
         callback(null, {
           statusCode: 200,
           headers: { "Content-Type": "application/json" },
