@@ -48,12 +48,18 @@ exports.handler = async function (event) {
     };
     data.map((item) => {
       console.log("Sending request to update: ", item);
+      console.log(
+        "request URL",
+        `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`
+      );
 
       axios
         .patch(
           `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
           {
-            title: "Updated from Netlify Function",
+            data: {
+              title: "Updated from Netlify Function",
+            },
           },
           {
             headers: headers,
