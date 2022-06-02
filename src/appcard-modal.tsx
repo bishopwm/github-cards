@@ -83,9 +83,14 @@ function App() {
     }
   }, [gitHubProjects]);
 
-  const handleSaveClick = () => {
-    console.log(updateGitHubIssue);
-    console.log(updateGitHubProjectCard);
+  const handleSaveClick = async () => {
+    //   Update GitHub Project Card (Project / Column)
+    // updateGitHubProjectCard()
+
+    updateGitHubIssue(username, repo, "issue_number", {
+      title: newTitle,
+      body: newDescription,
+    });
   };
 
   const handleCancelClick = async () => {
