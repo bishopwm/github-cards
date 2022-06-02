@@ -187,3 +187,62 @@ export const createGitHubProjectCard = async (
 
   return gitHubProjectCard;
 };
+
+/**
+ * Updates a GitHub Issue
+ *
+ */
+export const updateGitHubIssue = async (
+  username: string,
+  repo: string,
+  issueNumber: string,
+  data: {
+    title: string;
+    body: string;
+  }
+) => {
+  const gitHubIssue = fetch(
+    `${baseUrl}/repos/${username}/${repo}/issues/${issueNumber}`,
+    {
+      method: "PATCH",
+      headers: headers,
+      body: JSON.stringify(data),
+    }
+  )
+    .then((response) => response.json())
+    .then((result) => {
+      console.log(result);
+      return result;
+    })
+    .catch((error) => console.error(error));
+
+  return gitHubIssue;
+};
+
+/**
+ * Updates a GitHub Issue
+ *
+ */
+export const updateGitHubProjectCard = async (
+  gitHubProjectCardId: string,
+  data: {
+    columnId: string;
+  }
+) => {
+  const gitHubProjectCard = fetch(
+    `${baseUrl}/projects/columns/cards/${gitHubProjectCardId}/moves`,
+    {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(data),
+    }
+  )
+    .then((response) => response.json())
+    .then((result) => {
+      console.log(result);
+      return result;
+    })
+    .catch((error) => console.error(error));
+
+  return gitHubProjectCard;
+};

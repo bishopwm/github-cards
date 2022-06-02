@@ -1,4 +1,4 @@
-/* 
+/*
 
   This endpoint updates Miro App Cards when there is an update to their information
   in GitHub (i.e. if the title or description is updated)
@@ -14,6 +14,12 @@ const supabase = createClient(
 
 exports.handler = async function (event, context, callback) {
   // Get Issue
+  if (!event.body) {
+    return {
+      statusCode: 404,
+      body: JSON.stringify({ message: "No Body Found" }),
+    };
+  }
   const body = JSON.parse(event.body);
   const gitHubIssue = body.gitHubIssue;
   const gitHubIssueId = gitHubIssue.id;

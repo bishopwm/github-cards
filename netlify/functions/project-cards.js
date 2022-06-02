@@ -1,4 +1,4 @@
-/* 
+/*
 
   This endpoint updates Miro App Card statuses when there is an update to their poisition
   or column in GitHub (i.e. from "In Progress" to "Done")
@@ -14,6 +14,12 @@ const supabase = createClient(
 
 exports.handler = async function (event) {
   // Get project card
+  if (!event.body) {
+    return {
+      statusCode: 404,
+      body: JSON.stringify({ message: "No Body Found" }),
+    };
+  }
   const body = JSON.parse(event.body);
   const gitHubProjectCard = body.gitHubProjectCard;
 

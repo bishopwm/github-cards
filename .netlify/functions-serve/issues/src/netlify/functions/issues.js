@@ -95,7 +95,7 @@ var require_version2 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.version = void 0;
-    exports2.version = "1.22.15";
+    exports2.version = "1.22.16";
   }
 });
 
@@ -3384,6 +3384,10 @@ var require_GoTrueApi = __commonJS({
         if (options === null || options === void 0 ? void 0 : options.scopes) {
           urlParams.push(`scopes=${encodeURIComponent(options.scopes)}`);
         }
+        if (options === null || options === void 0 ? void 0 : options.queryParams) {
+          const query = new URLSearchParams(options.queryParams);
+          urlParams.push(`${query}`);
+        }
         return `${this.url}/authorize?${urlParams.join("&")}`;
       }
       signUpWithEmail(email, password, options = {}) {
@@ -4003,7 +4007,8 @@ var require_GoTrueClient = __commonJS({
             if (provider) {
               return this._handleProviderSignIn(provider, {
                 redirectTo: options.redirectTo,
-                scopes: options.scopes
+                scopes: options.scopes,
+                queryParams: options.queryParams
               });
             }
             if (oidc) {
@@ -4226,7 +4231,8 @@ var require_GoTrueClient = __commonJS({
       _handleProviderSignIn(provider, options = {}) {
         const url = this.api.getUrlForProvider(provider, {
           redirectTo: options.redirectTo,
-          scopes: options.scopes
+          scopes: options.scopes,
+          queryParams: options.queryParams
         });
         try {
           if ((0, helpers_1.isBrowser)()) {
@@ -4534,6 +4540,7 @@ var require_types2 = __commonJS({
         }
         this.fetch = (...args) => _fetch(...args);
         this.shouldThrowOnError = builder.shouldThrowOnError || false;
+        this.allowEmpty = builder.allowEmpty || false;
       }
       throwOnError(throwOnError) {
         if (throwOnError === null || throwOnError === void 0) {
@@ -4558,10 +4565,12 @@ var require_types2 = __commonJS({
           body: JSON.stringify(this.body),
           signal: this.signal
         }).then((res2) => __awaiter(this, void 0, void 0, function* () {
-          var _a4, _b, _c;
+          var _a4, _b, _c, _d2;
           let error = null;
           let data = null;
           let count = null;
+          let status = res2.status;
+          let statusText = res2.statusText;
           if (res2.ok) {
             const isReturnMinimal = (_a4 = this.headers["Prefer"]) === null || _a4 === void 0 ? void 0 : _a4.split(",").includes("return=minimal");
             if (this.method !== "HEAD" && !isReturnMinimal) {
@@ -4582,10 +4591,15 @@ var require_types2 = __commonJS({
             const body = yield res2.text();
             try {
               error = JSON.parse(body);
-            } catch (_d2) {
+            } catch (_e) {
               error = {
                 message: body
               };
+            }
+            if (error && this.allowEmpty && ((_d2 = error === null || error === void 0 ? void 0 : error.details) === null || _d2 === void 0 ? void 0 : _d2.includes("Results contain 0 rows"))) {
+              error = null;
+              status = 200;
+              statusText = "OK";
             }
             if (error && this.shouldThrowOnError) {
               throw error;
@@ -4595,8 +4609,8 @@ var require_types2 = __commonJS({
             error,
             data,
             count,
-            status: res2.status,
-            statusText: res2.statusText,
+            status,
+            statusText,
             body: data
           };
           return postgrestResponse;
@@ -4672,22 +4686,8 @@ var require_PostgrestTransformBuilder = __commonJS({
       }
       maybeSingle() {
         this.headers["Accept"] = "application/vnd.pgrst.object+json";
-        const _this = new PostgrestTransformBuilder(this);
-        _this.then = (onfulfilled, onrejected) => this.then((res) => {
-          var _a4, _b;
-          if ((_b = (_a4 = res.error) === null || _a4 === void 0 ? void 0 : _a4.details) === null || _b === void 0 ? void 0 : _b.includes("Results contain 0 rows")) {
-            return onfulfilled({
-              error: null,
-              data: null,
-              count: res.count,
-              status: 200,
-              statusText: "OK",
-              body: null
-            });
-          }
-          return onfulfilled(res);
-        }, onrejected);
-        return _this;
+        this.allowEmpty = true;
+        return this;
       }
       csv() {
         this.headers["Accept"] = "text/csv";
@@ -5028,7 +5028,7 @@ var require_version3 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.version = void 0;
-    exports2.version = "0.37.2";
+    exports2.version = "0.37.3";
   }
 });
 
@@ -5261,9 +5261,9 @@ var require_transformers = __commonJS({
   }
 });
 
-// node_modules/debug/node_modules/ms/index.js
+// node_modules/websocket/node_modules/ms/index.js
 var require_ms = __commonJS({
-  "node_modules/debug/node_modules/ms/index.js"(exports2, module2) {
+  "node_modules/websocket/node_modules/ms/index.js"(exports2, module2) {
     var s2 = 1e3;
     var m2 = s2 * 60;
     var h2 = m2 * 60;
@@ -5359,9 +5359,9 @@ var require_ms = __commonJS({
   }
 });
 
-// node_modules/debug/src/debug.js
+// node_modules/websocket/node_modules/debug/src/debug.js
 var require_debug = __commonJS({
-  "node_modules/debug/src/debug.js"(exports2, module2) {
+  "node_modules/websocket/node_modules/debug/src/debug.js"(exports2, module2) {
     exports2 = module2.exports = createDebug.debug = createDebug["default"] = createDebug;
     exports2.coerce = coerce;
     exports2.disable = disable;
@@ -5468,9 +5468,9 @@ var require_debug = __commonJS({
   }
 });
 
-// node_modules/debug/src/browser.js
+// node_modules/websocket/node_modules/debug/src/browser.js
 var require_browser = __commonJS({
-  "node_modules/debug/src/browser.js"(exports2, module2) {
+  "node_modules/websocket/node_modules/debug/src/browser.js"(exports2, module2) {
     exports2 = module2.exports = require_debug();
     exports2.log = log;
     exports2.formatArgs = formatArgs;
@@ -5552,9 +5552,9 @@ var require_browser = __commonJS({
   }
 });
 
-// node_modules/debug/src/node.js
+// node_modules/websocket/node_modules/debug/src/node.js
 var require_node = __commonJS({
-  "node_modules/debug/src/node.js"(exports2, module2) {
+  "node_modules/websocket/node_modules/debug/src/node.js"(exports2, module2) {
     var tty = require("tty");
     var util = require("util");
     exports2 = module2.exports = require_debug();
@@ -5676,9 +5676,9 @@ var require_node = __commonJS({
   }
 });
 
-// node_modules/debug/src/index.js
+// node_modules/websocket/node_modules/debug/src/index.js
 var require_src = __commonJS({
-  "node_modules/debug/src/index.js"(exports2, module2) {
+  "node_modules/websocket/node_modules/debug/src/index.js"(exports2, module2) {
     if (typeof process !== "undefined" && process.type === "renderer") {
       module2.exports = require_browser();
     } else {
@@ -15618,7 +15618,7 @@ var getNodeRequestOptions = (request) => {
     headers.set("User-Agent", "node-fetch");
   }
   if (request.compress && !headers.has("Accept-Encoding")) {
-    headers.set("Accept-Encoding", "gzip,deflate,br");
+    headers.set("Accept-Encoding", "gzip, deflate, br");
   }
   let { agent } = request;
   if (typeof agent === "function") {
@@ -15896,16 +15896,18 @@ function fixResponseChunkedTransferBadEnding(request, errorCallback) {
         errorCallback(error);
       }
     };
-    socket.prependListener("close", onSocketClose);
-    request.on("abort", () => {
-      socket.removeListener("close", onSocketClose);
-    });
-    socket.on("data", (buf) => {
+    const onData = (buf) => {
       properLastChunkReceived = import_node_buffer2.Buffer.compare(buf.slice(-5), LAST_CHUNK) === 0;
       if (!properLastChunkReceived && previousChunk) {
         properLastChunkReceived = import_node_buffer2.Buffer.compare(previousChunk.slice(-3), LAST_CHUNK.slice(0, 3)) === 0 && import_node_buffer2.Buffer.compare(buf.slice(-2), LAST_CHUNK.slice(3)) === 0;
       }
       previousChunk = buf;
+    };
+    socket.prependListener("close", onSocketClose);
+    socket.on("data", onData);
+    request.on("close", () => {
+      socket.removeListener("close", onSocketClose);
+      socket.removeListener("data", onData);
     });
   });
 }
@@ -15913,6 +15915,12 @@ function fixResponseChunkedTransferBadEnding(request, errorCallback) {
 // netlify/functions/issues.js
 var supabase = (0, import_supabase_js.createClient)(process.env.VITE_DATABASE_URL, process.env.VITE_DATABASE_PUBLIC_KEY);
 exports.handler = async function(event, context, callback) {
+  if (!event.body) {
+    return {
+      statusCode: 404,
+      body: JSON.stringify({ message: "No Body Found" })
+    };
+  }
   const body = JSON.parse(event.body);
   const gitHubIssue = body.gitHubIssue;
   const gitHubIssueId = gitHubIssue.id;
@@ -15943,26 +15951,7 @@ exports.handler = async function(event, context, callback) {
   if (data) {
     await Promise.all(data.map(async (item) => {
       return new Promise((resolve, reject) => {
-        fetch2(`https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`, options).then((res) => {
-          if (res.ok) {
-            return res.json();
-          } else {
-            resolve({
-              statusCode: res.status || 500,
-              body: res.statusText
-            });
-          }
-        }).then((data2) => {
-          const response = {
-            statusCode: 200,
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify(data2)
-          };
-          resolve(response);
-        }).catch((err) => {
-          console.log(err);
-          resolve({ statusCode: err.statusCode || 500, body: err.message });
-        });
+        fetch2(`https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`, options);
       });
     }));
   }
