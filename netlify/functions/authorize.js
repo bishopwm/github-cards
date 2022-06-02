@@ -1,7 +1,6 @@
-exports.handler = async function (event, context, callback) {};
+exports.handler = async function (event, context, callback) { };
 import axios from "axios";
 import { createClient } from "@supabase/supabase-js";
-//import fetch from "node-fetch";
 
 const supabase = createClient(
   process.env.VITE_DATABASE_URL,
@@ -25,7 +24,7 @@ exports.handler = async function (event, context, callback) {
     const redirectUrl = `https://miro.com/app-install-completed/?client_id=${clientId}&team_id=${teamId}`
     const url = `https://api.miro.com/v1/oauth/token?grant_type=authorization_code&client_id=${clientId}&client_secret=${process.env.MIRO_CLIENT_SECRET}&code=${code}&redirect_uri=${process.env.MIRO_REDIRECT_URL}`;
 
-    grabToken(url);
+    getToken(url);
 
     return {
       statusCode: 302,
@@ -44,32 +43,24 @@ exports.handler = async function (event, context, callback) {
   }
 }
 
-async function grabToken(url) {
-  try {
-    let oauthResponse = await axios.post(url);
+async function getToken(url) {
+  let oauthResponse = await axios.post(url);
 
-    console.log(`access_token: ${oauthResponse.data.access_token}`);
+  miro_access_token = oauthResponse.data.access_token;
+  miro_user_id = oauthResponse.data.user_id;
+  miro_team_id = oauthResponse.data.team_id;
 
-    miro_access_token = oauthResponse.data.access_token;
-    miro_user_id = oauthResponse.data.user_id;
-    miro_team_id = oauthResponse.data.team_id;
-    console.log("miro_team_id " + miro_team_id);
+  const modifiedAtTime = new Date();
 
-    const modifiedAtTime = new Date();
-
-    if (miro_access_token) {
-      // If access_token, then post oauth response data to supabase
-      await supabase.from("auth").upsert([
-        {
-          access_token: miro_access_token,
-          miroUserId: miro_user_id,
-          modified_at: modifiedAtTime
-        },
-      ]).then(({ data, error }) => {
-        console.log(data, error)
-      })
-    }
-  } catch (err) {
-    console.log(`ERROR: ${err}`);
-  }
+  await supabase.from("auth").upsert([
+    {
+      access_token: miro_access_token,
+      miroUserId: miro_user_id,
+      modified_at: modifiedAtTime
+    },
+  ]).then(({ data, error }) => {
+    console.log(data, error)
+  }).catch(err => {
+    console.log(err);
+  })
 }
