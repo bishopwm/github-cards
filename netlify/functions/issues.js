@@ -67,11 +67,13 @@ exports.handler = async function (event, context, callback) {
     await Promise.all(
       data.map(async (item) => {
         return new Promise((resolve, reject) => {
+          console.log("about to fetch", item);
           fetch(
             `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
             options
           )
             .then((res) => {
+              console.log("got response", res);
               if (res.ok) {
                 return res.json();
               } else {
