@@ -15913,6 +15913,12 @@ function fixResponseChunkedTransferBadEnding(request, errorCallback) {
 // netlify/functions/issues.js
 var supabase = (0, import_supabase_js.createClient)(process.env.VITE_DATABASE_URL, process.env.VITE_DATABASE_PUBLIC_KEY);
 exports.handler = async function(event, context, callback) {
+  if (!event.body) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: "No Body Found" })
+    };
+  }
   const body = JSON.parse(event.body);
   const gitHubIssue = body.gitHubIssue;
   const gitHubIssueId = gitHubIssue.id;
@@ -15931,7 +15937,7 @@ exports.handler = async function(event, context, callback) {
       }
     })
   };
-  const { data, error } = await supabase.from("card-mapping").select("id, miroAppCardId::text, gitHubIssueId, miroUserId::text, gitHubUsername, created_at, miroBoardId").eq("gitHubIssueId", gitHubIssueId);
+  const { data, error } = await supabase.from("card-mapping").select("id, miroAppCardId::text, gitHubIssueId, miroUserId::text, gitHubUsername, created_at, miroBoardId, gitHubIssueNumber").eq("gitHubIssueId", gitHubIssueId);
   if (error) {
     return {
       statusCode: 200,
@@ -15943,26 +15949,7 @@ exports.handler = async function(event, context, callback) {
   if (data) {
     await Promise.all(data.map(async (item) => {
       return new Promise((resolve, reject) => {
-        fetch2(`https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`, options).then((res) => {
-          if (res.ok) {
-            return res.json();
-          } else {
-            resolve({
-              statusCode: res.status || 500,
-              body: res.statusText
-            });
-          }
-        }).then((data2) => {
-          const response = {
-            statusCode: 200,
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify(data2)
-          };
-          resolve(response);
-        }).catch((err) => {
-          console.log(err);
-          resolve({ statusCode: err.statusCode || 500, body: err.message });
-        });
+        fetch2(`https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`, options);
       });
     }));
   }

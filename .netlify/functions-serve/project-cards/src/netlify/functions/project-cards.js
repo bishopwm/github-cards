@@ -21956,6 +21956,12 @@ var import_supabase_js = __toESM(require_main6());
 var import_axios = __toESM(require_axios2());
 var supabase = (0, import_supabase_js.createClient)(process.env.VITE_DATABASE_URL, process.env.VITE_DATABASE_PUBLIC_KEY);
 exports.handler = async function(event) {
+  if (!event.body) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: "No Body Found" })
+    };
+  }
   const body = JSON.parse(event.body);
   const gitHubProjectCard = body.gitHubProjectCard;
   const gitHubProjectCardId = gitHubProjectCard.id;

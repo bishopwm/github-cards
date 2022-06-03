@@ -13,6 +13,13 @@ const supabase = createClient(
 );
 
 exports.handler = async function (event, context, callback) {
+  if (!event.body) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: "No Body Found" }),
+    };
+  }
+
   // Get Issue
   const body = JSON.parse(event.body);
   const gitHubIssue = body.gitHubIssue;
@@ -41,7 +48,7 @@ exports.handler = async function (event, context, callback) {
   const { data, error } = await supabase
     .from("card-mapping")
     .select(
-      "id, miroAppCardId::text, gitHubIssueId, miroUserId::text, gitHubUsername, created_at, miroBoardId"
+      "id, miroAppCardId::text, gitHubIssueId, miroUserId::text, gitHubUsername, created_at, miroBoardId, gitHubIssueNumber"
     )
     .eq("gitHubIssueId", gitHubIssueId);
 

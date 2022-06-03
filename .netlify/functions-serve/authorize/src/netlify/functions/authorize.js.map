@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "sources": ["../../../../../../Users/addisonschultz/Desktop/Development/github-cards/netlify/functions/authorize.js"],
+  "sourceRoot": "/var/folders/f_/z71rwlpx28d_s_t4zpwvpx300000gn/T/tmp-40947-H8vTo9NUdiBJ",
+  "sourcesContent": ["exports.handler = async (event, context) => {\n  const redirectUrl = \"https://google.com\";\n\n  return {\n    statusCode: 302,\n    headers: {\n      Location: redirectUrl,\n      \"Cache-Control\": \"no-cache\",\n    },\n    body: JSON.stringify({}),\n  };\n};\n"],
+  "mappings": ";AAAA,QAAQ,UAAU,OAAO,OAAO,YAAY;AAC1C,QAAM,cAAc;AAEpB,SAAO;AAAA,IACL,YAAY;AAAA,IACZ,SAAS;AAAA,MACP,UAAU;AAAA,MACV,iBAAiB;AAAA,IACnB;AAAA,IACA,MAAM,KAAK,UAAU,CAAC,CAAC;AAAA,EACzB;AACF;",
+  "names": []
+}
