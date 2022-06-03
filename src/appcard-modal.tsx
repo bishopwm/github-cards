@@ -45,7 +45,7 @@ function App() {
   // Get and store appCardId from window location
   React.useEffect(() => {
     const appCardId = window.location.href
-      .split("http://localhost:3000/appcard-modal.html?appCardId=")
+      .split(`${process.env.VITE_BASE_URL}/appcard-modal.html?appCardId=`)
       .pop();
 
     if (appCardId) {
