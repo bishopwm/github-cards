@@ -13,6 +13,13 @@ const supabase = createClient(
 );
 
 exports.handler = async function (event) {
+  if (!event.body) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: "No Body Found" }),
+    };
+  }
+
   // Get project card
   const body = JSON.parse(event.body);
   const gitHubProjectCard = body.gitHubProjectCard;

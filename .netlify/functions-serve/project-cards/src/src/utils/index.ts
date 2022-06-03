@@ -4,8 +4,10 @@ export {
   fetchGitHubCards,
   fetchGitHubIssues,
   fetchGitHubCollaborators,
-  createGitHubProjectCard,
   createGitHubIssue,
+  createGitHubProjectCard,
+  updateGitHubIssue,
+  updateGitHubProjectCard,
 } from "./github";
 
 export {

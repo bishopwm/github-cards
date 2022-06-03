@@ -63,6 +63,7 @@ export const insertGitHubAppCards = async (gitHubIssues: any[]) => {
           miroUserId: appCard.createdBy,
           gitHubUsername: issue.user.login,
           miroBoardId: id,
+          gitHubIssueNumber: issue.number,
         },
       ]);
     })

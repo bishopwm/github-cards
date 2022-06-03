@@ -84,13 +84,30 @@ function App() {
   }, [gitHubProjects]);
 
   const handleSaveClick = async () => {
-    //   Update GitHub Project Card (Project / Column)
-    // updateGitHubProjectCard()
+    await supabase
+      .from("card-mapping")
+      .select(
+        "id, miroAppCardId::text, gitHubIssueId, miroUserId::text, gitHubUsername, created_at, miroBoardId, gitHubIssueNumber"
+      )
+      .eq("miroAppCardId", appCardId)
+      .then(({ data }) => {
+        if (data) {
+          const gitHubIssueNumber = data[0].gitHubIssueNumber;
 
-    updateGitHubIssue(username, repo, "issue_number", {
-      title: newTitle,
-      body: newDescription,
-    });
+          // Update GitHub Issue
+          updateGitHubIssue(username, repo, gitHubIssueNumber, {
+            title: newTitle,
+            body: newDescription,
+          });
+
+          updateGitHubProjectCard(gitHubIssueNumber, {
+            columnId: selectedColumn.id,
+          });
+        }
+      })
+      .then(() => {
+        // miro.board.ui.closeModal();
+      });
   };
 
   const handleCancelClick = async () => {
