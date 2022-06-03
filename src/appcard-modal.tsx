@@ -44,6 +44,9 @@ function App() {
 
   // Get and store appCardId from window location
   React.useEffect(() => {
+    console.log(window.location.href);
+    console.log(process.env);
+
     const appCardId = window.location.href
       .split(`${process.env.VITE_BASE_URL}/appcard-modal.html?appCardId=`)
       .pop();

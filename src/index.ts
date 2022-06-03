@@ -7,9 +7,8 @@ async function init() {
   miro.board.ui.on("app_card:open", (event) => {
     const { appCard } = event;
 
-    console.log(process.env.VITE_BASE_URL);
     // Fetch a specific app card by specifying its ID
-    const url = `${process.env.VITE_BASE_URL}/appcard-modal.html?appCardId=${appCard.id}`;
+    const url = `/appcard-modal.html?appCardId=${appCard.id}`;
 
     // Open the modal to display the content of the fetched app card
     miro.board.ui.openModal({
