@@ -68,6 +68,7 @@ exports.handler = async function (event, context, callback) {
       data.map(async (item) => {
         return new Promise((resolve, reject) => {
           console.log("about to fetch", item);
+          console.log("KEY", process.env.VITE_MIRO_API_TOKEN);
           fetch(
             `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
             options
