@@ -70,7 +70,12 @@ exports.handler = async function (event, context, callback) {
           fetch(
             `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
             options
-          );
+          ).then(() => {
+            return {
+              statusCode: 200,
+              body: JSON.stringify({ message: "Request sent" }),
+            };
+          });
           // .then((res) => {
           //   if (res.ok) {
           //     return res.json();
