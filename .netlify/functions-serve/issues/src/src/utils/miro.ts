@@ -19,6 +19,7 @@ export const insertAppCards = async (
     style: {
       cardTheme: selectedColor.background,
     },
+    status: "connected"
   });
 };
 

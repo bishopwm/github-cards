@@ -15919,6 +15919,7 @@ exports.handler = async function(event, context, callback) {
       body: JSON.stringify({ message: "No Body Found" })
     };
   }
+  console.log(event.body);
   const body = JSON.parse(event.body);
   const gitHubIssue = body.gitHubIssue;
   const gitHubIssueId = gitHubIssue.id;
@@ -15949,7 +15950,27 @@ exports.handler = async function(event, context, callback) {
   if (data) {
     await Promise.all(data.map(async (item) => {
       return new Promise((resolve, reject) => {
-        fetch2(`https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`, options);
+        fetch2(`https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`, options).then((res) => {
+          console.log("got response", res);
+          if (res.ok) {
+            return res.json();
+          } else {
+            resolve({
+              statusCode: res.status || 500,
+              body: res.statusText
+            });
+          }
+        }).then((data2) => {
+          const response = {
+            statusCode: 200,
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(data2)
+          };
+          resolve(response);
+        }).catch((err) => {
+          console.log(err);
+          resolve({ statusCode: err.statusCode || 500, body: err.message });
+        });
       });
     }));
   }
