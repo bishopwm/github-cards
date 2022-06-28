@@ -96,6 +96,11 @@ exports.handler = async function (event, context, callback) {
             });
         });
       })
-    );
+    ).then(() => {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: "Items Updated" }),
+      };
+    });
   }
 };

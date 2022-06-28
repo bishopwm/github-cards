@@ -15971,7 +15971,12 @@ exports.handler = async function(event, context, callback) {
           resolve({ statusCode: err.statusCode || 500, body: err.message });
         });
       });
-    }));
+    })).then(() => {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: "Items Updated" })
+      };
+    });
   }
 };
 /*! fetch-blob. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> */

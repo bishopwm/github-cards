@@ -29,15 +29,6 @@ const Miro = () => {
   });
   const [selectedItems, setSelectedItems] = React.useState<any[]>([]);
 
-  const getSelection = async () => {
-    const itemsSelected = await miro.board.getSelection();
-
-    if (itemsSelected.length > 0) {
-      setItemsSelected(true);
-      setSelectedItems([...itemsSelected]);
-    }
-  };
-
   // Handle creating GitHub Issue & Card (inside project) in GitHub
   const handleCreateGitHubCards = (selectedItems: any[]) => {
     selectedItems.map((item) => {
@@ -63,7 +54,25 @@ const Miro = () => {
 
   // Get selection on initialization
   React.useEffect(() => {
-    getSelection();
+    // Listen to selection updates
+    miro.board.ui.on("selection:update", async (event) => {
+      const selectedItems = event.items;
+
+      // Filter sticky notes from the selected items
+      const stickyNotes = selectedItems.filter(
+        (item) => item.type === "sticky_note"
+      );
+
+      // Check to see if sticky notes are selected
+      if (stickyNotes.length > 0) {
+        setItemsSelected(true);
+        setSelectedItems([...selectedItems]);
+        console.log(selectedItems);
+      } else {
+        setItemsSelected(false);
+        setSelectedItems([]);
+      }
+    });
   }, []);
 
   return (
