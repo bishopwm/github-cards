@@ -15919,26 +15919,10 @@ exports.handler = async function(event, context, callback) {
       body: JSON.stringify({ message: "No Body Found" })
     };
   }
-  console.log(event.body);
   const body = JSON.parse(event.body);
   const gitHubIssue = body.gitHubIssue;
   const gitHubIssueId = gitHubIssue.id;
-  const headers = {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${process.env.VITE_MIRO_API_TOKEN}`
-  };
-  const options = {
-    method: "PATCH",
-    headers,
-    body: JSON.stringify({
-      data: {
-        title: gitHubIssue.title,
-        description: gitHubIssue.body
-      }
-    })
-  };
-  const { data, error } = await supabase.from("card-mapping").select("id, miroAppCardId::text, gitHubIssueId, miroUserId::text, gitHubUsername, created_at, miroBoardId, gitHubIssueNumber").eq("gitHubIssueId", gitHubIssueId);
+  const { data, error } = await supabase.from("card-mapping").select("id, miroAppCardId::text, gitHubIssueId, miroUserId::text, gitHubUsername, created_at, miroBoardId, gitHubIssueNumber, auth ( access_token )").eq("gitHubIssueId", gitHubIssueId);
   if (error) {
     return {
       statusCode: 200,
@@ -15949,6 +15933,21 @@ exports.handler = async function(event, context, callback) {
   }
   if (data) {
     await Promise.all(data.map(async (item) => {
+      const headers = {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${item.auth.access_token}`
+      };
+      const options = {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify({
+          data: {
+            title: gitHubIssue.title,
+            description: gitHubIssue.body
+          }
+        })
+      };
       return new Promise((resolve, reject) => {
         fetch2(`https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`, options).then((res) => {
           console.log("got response", res);

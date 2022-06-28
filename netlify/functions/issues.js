@@ -20,37 +20,16 @@ exports.handler = async function (event, context, callback) {
     };
   }
 
-  console.log(event.body);
-
   // Get Issue
   const body = JSON.parse(event.body);
   const gitHubIssue = body.gitHubIssue;
   const gitHubIssueId = gitHubIssue.id;
 
-  //   Request Headers
-  const headers = {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${process.env.VITE_MIRO_API_TOKEN}`,
-  };
-
-  //   Request body
-  const options = {
-    method: "PATCH",
-    headers: headers,
-    body: JSON.stringify({
-      data: {
-        title: gitHubIssue.title,
-        description: gitHubIssue.body,
-      },
-    }),
-  };
-
   //   Get card mappings from database
   const { data, error } = await supabase
     .from("card-mapping")
     .select(
-      "id, miroAppCardId::text, gitHubIssueId, miroUserId::text, gitHubUsername, created_at, miroBoardId, gitHubIssueNumber"
+      "id, miroAppCardId::text, gitHubIssueId, miroUserId::text, gitHubUsername, created_at, miroBoardId, gitHubIssueNumber, auth ( access_token )"
     )
     .eq("gitHubIssueId", gitHubIssueId);
 
@@ -68,6 +47,25 @@ exports.handler = async function (event, context, callback) {
   if (data) {
     await Promise.all(
       data.map(async (item) => {
+        //   Request Headers
+        const headers = {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${item.auth.access_token}`,
+        };
+
+        //   Request body
+        const options = {
+          method: "PATCH",
+          headers: headers,
+          body: JSON.stringify({
+            data: {
+              title: gitHubIssue.title,
+              description: gitHubIssue.body,
+            },
+          }),
+        };
+
         return new Promise((resolve, reject) => {
           fetch(
             `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,

@@ -21954,8 +21954,6 @@ var require_main6 = __commonJS({
 // netlify/functions/authorize.js
 var import_axios = __toESM(require_axios2());
 var import_supabase_js = __toESM(require_main6());
-exports.handler = async function(event, context, callback) {
-};
 var supabase = (0, import_supabase_js.createClient)(process.env.VITE_DATABASE_URL, process.env.VITE_DATABASE_PUBLIC_KEY);
 exports.handler = async function(event, context, callback) {
   if (event.httpMethod == "GET") {
