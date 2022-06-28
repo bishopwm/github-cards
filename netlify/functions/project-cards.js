@@ -25,11 +25,8 @@ exports.handler = async function (event) {
   const gitHubProjectCard = body.gitHubProjectCard;
 
   const gitHubProjectCardId = gitHubProjectCard.id;
-  const gitHubProjectId = gitHubProjectCard.project_url
-    .split("https://api.github.com/projects/")
-    .pop();
 
-  console.log("Upated Project Card: ", gitHubProjectCard);
+  console.log(gitHubProjectCard.column_url);
   // {
   //   after_id: 80880591,
   //   archived: false,
@@ -66,56 +63,57 @@ exports.handler = async function (event) {
   // }
 
   // Get column name
-  fetchGitHubColumns(gitHubProjectId).then((response) => {
-    console.log("Project Columns", response);
-  });
+  // fetchGitHubColumn(gitHubProjectCard.column_url).then((response) => {
+  //   console.log("Project Columns", response);
+  // });
 
-  const { data, error } = await supabase
-    .from("card-mapping")
-    .select()
-    .eq("gitHubIssueId", gitHubProjectCardId);
+  // const { data, error } = await supabase
+  //   .from("card-mapping")
+  //   .select()
+  //   .eq("gitHubIssueId", gitHubProjectCardId);
 
-  // No Miro App Card Found
-  if (error) {
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        message: "No Miro App Card found for this project card",
-      }),
-    };
-  }
+  // // No Miro App Card Found
+  // if (error) {
+  //   return {
+  //     statusCode: 200,
+  //     body: JSON.stringify({
+  //       message: "No Miro App Card found for this project card",
+  //     }),
+  //   };
+  // }
 
-  console.log("Data", data);
-  // Matching App Cards found
-  if (data) {
-    const headers = {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.VITE_MIRO_API_TOKEN}`,
-    };
+  // console.log("Data", data);
+  // // Matching App Cards found
+  // if (data) {
+  //   const headers = {
+  //     Accept: "application/json",
+  //     "Content-Type": "application/json",
+  //     Authorization: `Bearer ${process.env.VITE_MIRO_API_TOKEN}`,
+  //   };
 
-    // data.map((item) => {
-    //   axios
-    //     .patch(
-    //       `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
-    //       {
-    //         title: "Updated from Netlify Function",
-    //       },
-    //       {
-    //         headers: headers,
-    //       }
-    //     )
-    //     .then(function (response) {
-    //       res.json(response.data);
-    //     })
-    //     .catch(function (error) {
-    //       console.log(error);
-    //     });
-    // });
-  }
+  // data.map((item) => {
+  //   axios
+  //     .patch(
+  //       `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
+  //       {
+  //         title: "Updated from Netlify Function",
+  //       },
+  //       {
+  //         headers: headers,
+  //       }
+  //     )
+  //     .then(function (response) {
+  //       res.json(response.data);
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+  // });
+  // }
 
+  // Final response
   return {
     statusCode: 200,
-    body: JSON.stringify({ message: "Project Card Endpoint" }),
+    body: JSON.stringify({ message: "Request sent" }),
   };
 };

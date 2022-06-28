@@ -21965,31 +21965,10 @@ exports.handler = async function(event) {
   const body = JSON.parse(event.body);
   const gitHubProjectCard = body.gitHubProjectCard;
   const gitHubProjectCardId = gitHubProjectCard.id;
-  const gitHubProjectId = gitHubProjectCard.project_url.split("https://api.github.com/projects/").pop();
-  console.log("Upated Project Card: ", gitHubProjectCard);
-  fetchGitHubColumns(gitHubProjectId).then((response) => {
-    console.log("Project Columns", response);
-  });
-  const { data, error } = await supabase.from("card-mapping").select().eq("gitHubIssueId", gitHubProjectCardId);
-  if (error) {
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        message: "No Miro App Card found for this project card"
-      })
-    };
-  }
-  console.log("Data", data);
-  if (data) {
-    const headers = {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.VITE_MIRO_API_TOKEN}`
-    };
-  }
+  console.log(gitHubProjectCard.column_url);
   return {
     statusCode: 200,
-    body: JSON.stringify({ message: "Project Card Endpoint" })
+    body: JSON.stringify({ message: "Request sent" })
   };
 };
 /*!

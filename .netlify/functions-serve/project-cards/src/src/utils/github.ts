@@ -67,6 +67,27 @@ export const fetchGitHubColumns = async (project_id: string) => {
 };
 
 /**
+ * Fetches a single column by id
+ *
+ * Returns {
+ * }
+ */
+export const fetchGitHubColumn = async (column_id: string) => {
+  const gitHubColumn = fetch(`${baseUrl}/projects/columns/${column_id}`, {
+    method: "GET",
+    headers: headers,
+  })
+    .then((response) => response.json())
+    .then((result) => {
+      console.log(result);
+      return result;
+    })
+    .catch((error) => console.error(error));
+
+  return gitHubColumn;
+};
+
+/**
  * Fetches a list of cards under a specific project column id
  *
  * Returns {
