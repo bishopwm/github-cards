@@ -54,7 +54,7 @@ exports.handler = async function (event, context, callback) {
           Authorization: `Bearer ${item.auth.access_token}`,
         };
 
-        //   Request body
+        //   Request options & body
         const options = {
           method: "PATCH",
           headers: headers,

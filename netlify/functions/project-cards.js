@@ -6,6 +6,7 @@
 **/
 import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
+import { fetchGitHubColumn } from "../../src/utils";
 
 const supabase = createClient(
   process.env.VITE_DATABASE_URL,
@@ -23,49 +24,13 @@ exports.handler = async function (event) {
   // Get project card
   const body = JSON.parse(event.body);
   const gitHubProjectCard = body.gitHubProjectCard;
-
-  const gitHubProjectCardId = gitHubProjectCard.id;
-
-  console.log(gitHubProjectCard.column_url);
-  // {
-  //   after_id: 80880591,
-  //   archived: false,
-  //   column_id: 18512156,
-  //   column_url: 'https://api.github.com/projects/columns/18512156',
-  //   content_url: 'https://api.github.com/repos/addisonschultz/github-cards/issues/22',
-  //   created_at: '2022-05-23T09:11:41Z',
-  //   creator: {
-  //     avatar_url: 'https://avatars.githubusercontent.com/u/42930383?v=4',
-  //     events_url: 'https://api.github.com/users/addisonschultz/events{/privacy}',
-  //     followers_url: 'https://api.github.com/users/addisonschultz/followers',
-  //     following_url: 'https://api.github.com/users/addisonschultz/following{/other_user}',
-  //     gists_url: 'https://api.github.com/users/addisonschultz/gists{/gist_id}',
-  //     gravatar_id: '',
-  //     html_url: 'https://github.com/addisonschultz',
-  //     id: 42930383,
-  //     login: 'addisonschultz',
-  //     node_id: 'MDQ6VXNlcjQyOTMwMzgz',
-  //     organizations_url: 'https://api.github.com/users/addisonschultz/orgs',
-  //     received_events_url: 'https://api.github.com/users/addisonschultz/received_events',
-  //     repos_url: 'https://api.github.com/users/addisonschultz/repos',
-  //     site_admin: false,
-  //     starred_url: 'https://api.github.com/users/addisonschultz/starred{/owner}{/repo}',
-  //     subscriptions_url: 'https://api.github.com/users/addisonschultz/subscriptions',
-  //     type: 'User',
-  //     url: 'https://api.github.com/users/addisonschultz'
-  //   },
-  //   id: 82280938,
-  //   node_id: 'PRC_lALOHM5IKs4A24mvzgTngeo',
-  //   note: null,
-  //   project_url: 'https://api.github.com/projects/14387631',
-  //   updated_at: '2022-05-31T11:51:40Z',
-  //   url: 'https://api.github.com/projects/columns/cards/82280938'
-  // }
+  const gitHubProjectColumnId = gitHubProjectCard.column_id;
 
   // Get column name
-  // fetchGitHubColumn(gitHubProjectCard.column_url).then((response) => {
-  //   console.log("Project Columns", response);
-  // });
+  // const gitHubProjectColumn = await fetchGitHubColumn(gitHubProjectColumnId);
+  // const gitHubProjectColumnName = gitHubProjectColumn.name;
+
+  console.log(fetchGitHubColumn);
 
   // const { data, error } = await supabase
   //   .from("card-mapping")
