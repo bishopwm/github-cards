@@ -103,4 +103,10 @@ exports.handler = async function (event, context, callback) {
       };
     });
   }
+
+  // Final response
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ message: "Request sent" }),
+  };
 };

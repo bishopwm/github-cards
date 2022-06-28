@@ -15978,6 +15978,10 @@ exports.handler = async function(event, context, callback) {
       };
     });
   }
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ message: "Request sent" })
+  };
 };
 /*! fetch-blob. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> */
 /*! formdata-polyfill. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> */
