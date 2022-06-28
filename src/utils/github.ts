@@ -1,5 +1,6 @@
 const baseUrl = "https://api.github.com";
-const token = import.meta.env.VITE_GH_ACCESS_TOKEN;
+const token =
+  import.meta.env.VITE_GH_ACCESS_TOKEN || process.env.VITE_GH_ACCESS_TOKEN;
 const headers = new Headers({
   Authorization: `token ${token}`,
   Accept: "application/vnd.github.v3+json",
