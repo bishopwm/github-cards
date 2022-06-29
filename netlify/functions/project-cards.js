@@ -5,8 +5,6 @@
 
 **/
 import { createClient } from "@supabase/supabase-js";
-import axios from "axios";
-import { fetchGitHubColumn } from "../../src/utils";
 
 const supabase = createClient(
   process.env.VITE_DATABASE_URL,
@@ -26,11 +24,32 @@ exports.handler = async function (event) {
   const gitHubProjectCard = body.gitHubProjectCard;
   const gitHubProjectColumnId = gitHubProjectCard.column_id;
 
+  const headers = {
+    Accept: "application/vnd.github.v3+json",
+    Authorization: `token ${process.env.VITE_GH_ACCESS_TOKEN}`,
+  };
+
+  const gitHubProjectColumn = fetch(
+    `https://api.github.com/projects/columns/${gitHubProjectColumnId}`,
+    {
+      method: "GET",
+      headers: headers,
+    }
+  )
+    .then((response) => response.json())
+    .then((result) => {
+      console.log(result);
+      return result;
+    })
+    .catch((error) => console.error(error));
+
+  console.log(gitHubProjectColumn);
+
   // Get column name
   // const gitHubProjectColumn = await fetchGitHubColumn(gitHubProjectColumnId);
   // const gitHubProjectColumnName = gitHubProjectColumn.name;
 
-  console.log(fetchGitHubColumn);
+  // console.log(fetchGitHubColumn);
 
   // const { data, error } = await supabase
   //   .from("card-mapping")

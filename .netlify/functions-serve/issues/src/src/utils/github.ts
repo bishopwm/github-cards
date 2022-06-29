@@ -1,5 +1,6 @@
 const baseUrl = "https://api.github.com";
-const token = import.meta.env.VITE_GH_ACCESS_TOKEN;
+const token =
+  process.env.VITE_GH_ACCESS_TOKEN || import.meta.env.VITE_GH_ACCESS_TOKEN;
 const headers = new Headers({
   Authorization: `token ${token}`,
   Accept: "application/vnd.github.v3+json",
@@ -64,6 +65,27 @@ export const fetchGitHubColumns = async (project_id: string) => {
     .catch((error) => console.error(error));
 
   return gitHubColumns;
+};
+
+/**
+ * Fetches a single column by id
+ *
+ * Returns {
+ * }
+ */
+export const fetchGitHubColumn = async (column_id: string) => {
+  const gitHubColumn = fetch(`${baseUrl}/projects/columns/${column_id}`, {
+    method: "GET",
+    headers: headers,
+  })
+    .then((response) => response.json())
+    .then((result) => {
+      console.log(result);
+      return result;
+    })
+    .catch((error) => console.error(error));
+
+  return gitHubColumn;
 };
 
 /**
