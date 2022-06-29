@@ -6,6 +6,7 @@
 **/
 import { createClient } from "@supabase/supabase-js";
 import fetch from "node-fetch";
+import { getStatusColor } from "../../src/utils";
 
 const supabase = createClient(
   process.env.VITE_DATABASE_URL,
@@ -20,12 +21,13 @@ exports.handler = async function (event) {
     };
   }
 
-  console.log(event.body);
-
-  // Get project card
+  // Get GitHub project card & Issue Number
   const body = JSON.parse(event.body);
   const gitHubProjectCard = body.gitHubProjectCard;
   const gitHubProjectColumnId = gitHubProjectCard.column_id;
+  const gitHubIssueNumer = gitHubProjectCard.content_url
+    .split("https: //api.github.com/repos/addisonschultz/github-cards/issues/")
+    .pop();
 
   const headers = {
     Accept: "application/vnd.github.v3+json",
@@ -41,62 +43,105 @@ exports.handler = async function (event) {
   )
     .then((response) => response.json())
     .then((result) => {
-      console.log(result);
       return result;
     })
     .catch((error) => console.error(error));
 
-  console.log(gitHubProjectColumn);
-
   // Get column name
-  // const gitHubProjectColumn = await fetchGitHubColumn(gitHubProjectColumnId);
-  // const gitHubProjectColumnName = gitHubProjectColumn.name;
+  const gitHubProjectColumnName = gitHubProjectColumn.name;
 
-  // console.log(fetchGitHubColumn);
+  // Get relevant cards associated with this issue/project card
+  const { data, error } = await supabase
+    .from("card-mapping")
+    .select(
+      "id, miroAppCardId::text, gitHubIssueId, miroUserId::text, gitHubUsername, created_at, miroBoardId, gitHubIssueNumber, auth ( access_token )"
+    )
+    .eq("gitHubIssueNumber", gitHubIssueNumer);
 
-  // const { data, error } = await supabase
-  //   .from("card-mapping")
-  //   .select()
-  //   .eq("gitHubIssueId", gitHubProjectCardId);
+  // No Miro App Card Found
+  if (error) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: "No Miro App Card found for this project card",
+      }),
+    };
+  }
 
-  // // No Miro App Card Found
-  // if (error) {
-  //   return {
-  //     statusCode: 200,
-  //     body: JSON.stringify({
-  //       message: "No Miro App Card found for this project card",
-  //     }),
-  //   };
-  // }
+  console.log("Data", data);
+  // Matching App Cards found
+  if (data) {
+    await Promise.all(
+      data.map(async (item) => {
+        console.log(item);
+        // Get issue status color
+        const color = await getStatusColor(item.status.name);
 
-  // console.log("Data", data);
-  // // Matching App Cards found
-  // if (data) {
-  //   const headers = {
-  //     Accept: "application/json",
-  //     "Content-Type": "application/json",
-  //     Authorization: `Bearer ${process.env.VITE_MIRO_API_TOKEN}`,
-  //   };
+        // Request Headers
+        const headers = {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${item.auth.access_token}`,
+        };
 
-  // data.map((item) => {
-  //   axios
-  //     .patch(
-  //       `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
-  //       {
-  //         title: "Updated from Netlify Function",
-  //       },
-  //       {
-  //         headers: headers,
-  //       }
-  //     )
-  //     .then(function (response) {
-  //       res.json(response.data);
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // });
-  // }
+        //   Request options & body
+        const options = {
+          method: "PATCH",
+          headers: headers,
+          body: JSON.stringify({
+            data: {
+              fields: [
+                {
+                  value: gitHubProjectColumnName,
+                  iconShape: "square",
+                  fillColor: color,
+                  textColor: "#ffffff",
+                },
+              ],
+              style: {
+                cardTheme: color,
+              },
+            },
+          }),
+        };
+
+        return new Promise((resolve, reject) => {
+          fetch(
+            `https://api.miro.com/v2/boards/${item.miroBoardId}/app_cards/${item.miroAppCardId}`,
+            options
+          )
+            .then((res) => {
+              console.log("got response", res);
+              if (res.ok) {
+                return res.json();
+              } else {
+                resolve({
+                  statusCode: res.status || 500,
+                  body: res.statusText,
+                });
+              }
+            })
+            .then((data) => {
+              const response = {
+                statusCode: 200,
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify(data),
+              };
+              resolve(response);
+            })
+            .catch((err) => {
+              console.log(err);
+              resolve({ statusCode: err.statusCode || 500, body: err.message });
+            });
+        });
+      })
+    ).then(() => {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: "Items Updated" }),
+      };
+    });
+  }
 
   // Final response
   return {
