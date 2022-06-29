@@ -30,7 +30,7 @@ exports.handler = async function (event) {
     Authorization: `token ${process.env.VITE_GH_ACCESS_TOKEN}`,
   };
 
-  const gitHubProjectColumn = fetch(
+  const gitHubProjectColumn = await fetch(
     `https://api.github.com/projects/columns/${gitHubProjectColumnId}`,
     {
       method: "GET",
