@@ -20,6 +20,8 @@ exports.handler = async function (event) {
     };
   }
 
+  console.log(event.body);
+
   // Get project card
   const body = JSON.parse(event.body);
   const gitHubProjectCard = body.gitHubProjectCard;
