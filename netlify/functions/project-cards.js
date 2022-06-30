@@ -14,6 +14,8 @@ const supabase = createClient(
 );
 
 exports.handler = async function (event) {
+  console.log(process.env.VITE_GH_ACCESS_TOKEN);
+
   if (!event.body) {
     return {
       statusCode: 200,
