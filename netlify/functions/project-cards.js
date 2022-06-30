@@ -6,7 +6,7 @@
 **/
 import { createClient } from "@supabase/supabase-js";
 import fetch from "node-fetch";
-import { getStatusColor } from "../../src/utils";
+// import { getStatusColor } from "../../src/utils";
 
 const supabase = createClient(
   process.env.VITE_DATABASE_URL,
@@ -78,7 +78,8 @@ exports.handler = async function (event) {
       data.map(async (item) => {
         console.log(item);
         // Get issue status color
-        const color = await getStatusColor(item.status.name);
+        // const color = await getStatusColor(item.status.name);
+        const color = "#E53935";
 
         // Request Headers
         const headers = {
