@@ -67,12 +67,10 @@ exports.handler = async function (event) {
     };
   }
 
-  console.log("Data", data);
   // Matching App Cards found
   if (data) {
     await Promise.all(
       data.map(async (item) => {
-        console.log(item);
         // Get issue status color
         const color = await getStatusColor(item.status.name);
 

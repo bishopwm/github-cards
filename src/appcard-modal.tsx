@@ -13,6 +13,8 @@ import { supabase } from "./utils";
 
 function App() {
   const [appCardId, setAppCardId] = React.useState("");
+  const [newTitle, setNewTitle] = React.useState("");
+  const [newDescription, setNewDescription] = React.useState("");
 
   /**
    * Store information pulled from GitHub API
@@ -39,19 +41,20 @@ function App() {
     id: 0,
   });
 
-  const [newTitle, setNewTitle] = React.useState("");
-  const [newDescription, setNewDescription] = React.useState("");
-
-  // Get and store appCardId from window location
+  // Get and store appCardId, title, and description from window location
   React.useEffect(() => {
-    const baseUrl = import.meta.env.VITE_BASE_URL;
+    // Get URL parameters
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
 
-    const appCardId = window.location.href
-      .split(`${baseUrl}/appcard-modal.html?appCardId=`)
-      .pop();
+    const appCardId = urlParams.get("appCardId");
+    const appCardTitle = urlParams.get("appCardTitle");
+    const appCardDescription = urlParams.get("appCardDescription");
 
-    if (appCardId) {
+    if (appCardId && appCardTitle && appCardDescription) {
       setAppCardId(appCardId);
+      setNewTitle(appCardTitle);
+      setNewDescription(appCardDescription);
     }
   }, []);
 
@@ -135,12 +138,14 @@ function App() {
         label="Title"
         required={true}
         placeholder={"Title"}
+        value={newTitle}
         onChange={(value) => setNewTitle(value)}
       />
       <Input
         label="Description"
         required={true}
         placeholder={"Description"}
+        value={newDescription}
         onChange={(value) => setNewDescription(value)}
       />
       <div id={"appcard-modal-button-container"}>

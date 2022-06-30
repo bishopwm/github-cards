@@ -4,11 +4,13 @@ const Input = ({
   label,
   required,
   placeholder,
+  value,
   onChange,
 }: {
   label: string;
   required: boolean;
   placeholder: string;
+  value: string;
   onChange: (value: string) => void;
 }) => {
   return (
@@ -21,6 +23,7 @@ const Input = ({
           className="input"
           type="text"
           placeholder={placeholder}
+          value={value}
           onChange={(e) => onChange(e.target.value)}
         />
       </div>
