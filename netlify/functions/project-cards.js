@@ -6,7 +6,6 @@
 **/
 import { createClient } from "@supabase/supabase-js";
 import fetch from "node-fetch";
-// import { getStatusColor } from "../../src/utils";
 
 const supabase = createClient(
   process.env.VITE_DATABASE_URL,
@@ -14,9 +13,6 @@ const supabase = createClient(
 );
 
 exports.handler = async function (event) {
-  console.log("start of the function");
-  console.log(process.env.VITE_GH_ACCESS_TOKEN);
-
   if (!event.body) {
     return {
       statusCode: 200,
@@ -78,8 +74,7 @@ exports.handler = async function (event) {
       data.map(async (item) => {
         console.log(item);
         // Get issue status color
-        // const color = await getStatusColor(item.status.name);
-        const color = "#E53935";
+        const color = await getStatusColor(item.status.name);
 
         // Request Headers
         const headers = {
@@ -152,4 +147,25 @@ exports.handler = async function (event) {
     statusCode: 200,
     body: JSON.stringify({ message: "Request sent" }),
   };
+};
+
+const getStatusColor = async (status) => {
+  let color;
+
+  switch (status) {
+    case "To Do":
+      color = "#E53935";
+      break;
+    case "In Progress":
+      color = "#FFB300";
+      break;
+    case "Done":
+      color = "#7CB342";
+      break;
+    default:
+      color = "#C3C4C3";
+      break;
+  }
+
+  return color;
 };
