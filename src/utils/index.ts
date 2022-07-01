@@ -4,6 +4,7 @@ export {
   fetchGitHubColumn,
   fetchGitHubProjectCards,
   fetchGitHubIssues,
+  fetchGitHubProjectCard,
   fetchGitHubCollaborators,
   createGitHubIssue,
   createGitHubProjectCard,

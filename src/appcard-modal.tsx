@@ -6,7 +6,7 @@ import {
   fetchGitHubColumns,
   updateGitHubIssue,
   updateGitHubProjectCard,
-  fetchGitHubProjectCards,
+  getStatusColor,
 } from "./utils";
 import type { GitHubProject, GitHubColumns } from "./types";
 import { username, repo } from "./constants";
@@ -99,39 +99,45 @@ function App() {
       .eq("miroAppCardId", appCardId)
       .then(({ data }) => {
         if (data) {
-          console.log(JSON.stringify(data));
-          const gitHubIssueNumber = data[0].gitHubIssueNumber;
+          Promise.all(
+            data.map(async (item) => {
+              const gitHubIssueNumber = item.gitHubIssueNumber;
+              const color = getStatusColor(selectedColumn.name);
 
-          // Update GitHub Issue
-          updateGitHubIssue(username, repo, gitHubIssueNumber, {
-            title: newTitle,
-            body: newDescription,
-          });
+              // Update GitHub Issue
+              await updateGitHubIssue(username, repo, gitHubIssueNumber, {
+                title: newTitle,
+                body: newDescription,
+              });
 
-          // Get and filter github project cards
-          fetchGitHubProjectCards("original_project_column").then((cards) => {
-            const currentGitHubProjectCard = cards.filter(
-              (card) => card.id !== 1
-            );
+              // Update GitHub Project Card
+              await updateGitHubProjectCard(item.gitHubProjectCardId, {
+                columnId: selectedColumn.id,
+                card_id: item.gitHubProjectCardId,
+                position: "top",
+              });
 
-            return currentGitHubProjectCard;
-          });
+              // Update App Card
+              const currentAppCard = await miro.board.getById(appCardId);
 
-          // Update GitHub Project Card
-          updateGitHubProjectCard(gitHubIssueNumber, {
-            columnId: selectedColumn.id,
-            card_id: "",
-            position: "top",
-          });
+              currentAppCard.title = newTitle;
+              currentAppCard.description = newDescription;
+              currentAppCard.fields = [
+                {
+                  value: selectedColumn.name,
+                  iconShape: "square",
+                  fillColor: color,
+                  textColor: "#ffffff",
+                },
+              ];
+              currentAppCard.style.cardTheme = color;
 
-          // Update App Card
-          miro.board.getById(appCardId).then((currentAppCard) => {
-            console.log(currentAppCard);
+              await currentAppCard.sync();
+            })
+          ).then(() => {
+            miro.board.ui.closeModal();
           });
         }
-      })
-      .then(() => {
-        // miro.board.ui.closeModal();
       });
   };
 
@@ -158,7 +164,7 @@ function App() {
         label="Title"
         required={true}
         placeholder={"Title"}
-        value={newTitle}
+        value={newTitle.replace(/<\/?[^>]+(>|$)/g, "")}
         onChange={(value) => setNewTitle(value)}
       />
       <Input

@@ -112,6 +112,29 @@ export const fetchGitHubProjectCards = async (column_id: string) => {
 };
 
 /**
+ * Fetches a single GitHub project card by id
+ *
+ * Returns {
+ * }
+ */
+export const fetchGitHubProjectCard = async (card_id: string) => {
+  const gitHubProjectCard = fetch(
+    `${baseUrl}/projects/columns/cards/${card_id}`,
+    {
+      method: "GET",
+      headers: headers,
+    }
+  )
+    .then((response) => response.json())
+    .then((result) => {
+      return result;
+    })
+    .catch((error) => console.error(error));
+
+  return gitHubProjectCard;
+};
+
+/**
  * Fetches a list of issues in a repository
  *
  * Returns {
@@ -248,7 +271,7 @@ export const updateGitHubIssue = async (
 };
 
 /**
- * Updates a GitHub Issue
+ * Updates a GitHub Project Card Position
  *
  */
 export const updateGitHubProjectCard = async (
