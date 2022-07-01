@@ -9,7 +9,7 @@ export interface GitHubColumns {
   id: number;
 }
 
-export interface GitHubCard {
+export interface GitHubProjectCard {
   id: number;
   content_url: string;
   column_url: string;

@@ -31,24 +31,25 @@ const Miro = () => {
 
   // Handle creating GitHub Issue & Card (inside project) in GitHub
   const handleCreateGitHubCards = (selectedItems: any[]) => {
-    selectedItems.map((item) => {
+    selectedItems.map(async (item) => {
       const cleanedContent = item.content.replace(/<\/?[^>]+(>|$)/g, "");
 
-      createGitHubIssue(username, repo, {
+      const gitHubIssue = await createGitHubIssue(username, repo, {
         title: cleanedContent,
         body: "Imported from Miro",
-      })
-        .then((response) => {
-          createGitHubProjectCard(`${selectedColumn.id}`, {
-            note: null,
-            content_id: response.id,
-            content_type: "Issue",
-          });
-        })
-        .then(() => {
-          insertAppCards(item, selectedColor);
-          removeSelectedItem(item);
-        });
+      });
+
+      const gitHubProjectCard = await createGitHubProjectCard(
+        `${selectedColumn.id}`,
+        {
+          note: null,
+          content_id: gitHubIssue.id,
+          content_type: "Issue",
+        }
+      );
+
+      await insertAppCards(item, selectedColor, gitHubProjectCard, gitHubIssue);
+      await removeSelectedItem(item);
     });
   };
 

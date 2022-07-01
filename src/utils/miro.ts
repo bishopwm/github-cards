@@ -9,9 +9,14 @@ interface MiroSelection {
 
 export const insertAppCards = async (
   selection: MiroSelection,
-  selectedColor: { background: string }
+  selectedColor: { background: string },
+  gitHubProjectCard: any,
+  issue: any
 ) => {
-  await miro.board.createAppCard({
+  //  Get current Miro board
+  const { id } = await miro.board.getInfo();
+
+  const appCard = await miro.board.createAppCard({
     title: selection.content,
     description: "Github App Card Created",
     x: selection.x,
@@ -19,8 +24,21 @@ export const insertAppCards = async (
     style: {
       cardTheme: selectedColor.background,
     },
-    status: "connected"
+    status: "connected",
   });
+
+  // Post data to supabase
+  await supabase.from("card-mapping").insert([
+    {
+      miroAppCardId: appCard.id,
+      gitHubIssueId: issue.id,
+      miroUserId: appCard.createdBy,
+      gitHubUsername: issue.user.login,
+      miroBoardId: id,
+      gitHubIssueNumber: issue.number,
+      gitHubProjectCardId: gitHubProjectCard.id,
+    },
+  ]);
 };
 
 export const removeSelectedItem = async (item: any) => {
@@ -65,6 +83,7 @@ export const insertGitHubAppCards = async (gitHubIssues: any[]) => {
           gitHubUsername: issue.user.login,
           miroBoardId: id,
           gitHubIssueNumber: issue.number,
+          gitHubProjectCardId: issue.gitHubProjectCard.id,
         },
       ]);
     })

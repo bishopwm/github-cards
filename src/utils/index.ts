@@ -2,7 +2,7 @@ export {
   fetchGitHubProjects,
   fetchGitHubColumns,
   fetchGitHubColumn,
-  fetchGitHubCards,
+  fetchGitHubProjectCards,
   fetchGitHubIssues,
   fetchGitHubCollaborators,
   createGitHubIssue,

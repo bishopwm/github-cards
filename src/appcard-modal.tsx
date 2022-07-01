@@ -6,12 +6,14 @@ import {
   fetchGitHubColumns,
   updateGitHubIssue,
   updateGitHubProjectCard,
+  fetchGitHubProjectCards,
 } from "./utils";
 import type { GitHubProject, GitHubColumns } from "./types";
 import { username, repo } from "./constants";
 import { supabase } from "./utils";
 
 function App() {
+  // Keep information about app card in state
   const [appCardId, setAppCardId] = React.useState("");
   const [newTitle, setNewTitle] = React.useState("");
   const [newDescription, setNewDescription] = React.useState("");
@@ -92,11 +94,12 @@ function App() {
     await supabase
       .from("card-mapping")
       .select(
-        "id, miroAppCardId::text, gitHubIssueId, miroUserId::text, gitHubUsername, created_at, miroBoardId, gitHubIssueNumber"
+        "id, miroAppCardId::text, gitHubIssueId, miroUserId::text, gitHubUsername, created_at, miroBoardId, gitHubIssueNumber, gitHubProjectCardId"
       )
       .eq("miroAppCardId", appCardId)
       .then(({ data }) => {
         if (data) {
+          console.log(JSON.stringify(data));
           const gitHubIssueNumber = data[0].gitHubIssueNumber;
 
           // Update GitHub Issue
@@ -105,8 +108,25 @@ function App() {
             body: newDescription,
           });
 
+          // Get and filter github project cards
+          fetchGitHubProjectCards("original_project_column").then((cards) => {
+            const currentGitHubProjectCard = cards.filter(
+              (card) => card.id !== 1
+            );
+
+            return currentGitHubProjectCard;
+          });
+
+          // Update GitHub Project Card
           updateGitHubProjectCard(gitHubIssueNumber, {
             columnId: selectedColumn.id,
+            card_id: "",
+            position: "top",
+          });
+
+          // Update App Card
+          miro.board.getById(appCardId).then((currentAppCard) => {
+            console.log(currentAppCard);
           });
         }
       })

@@ -9,14 +9,14 @@ import {
 import {
   fetchGitHubProjects,
   fetchGitHubColumns,
-  fetchGitHubCards,
+  fetchGitHubProjectCards,
   fetchGitHubIssues,
   insertGitHubAppCards,
 } from "./utils";
 import type {
   GitHubProject,
   GitHubColumns,
-  GitHubCard,
+  GitHubProjectCard,
   GitHubIssue,
 } from "./types";
 import { username, repo } from "./constants";
@@ -36,7 +36,9 @@ function Modal() {
     []
   );
   const [gitHubColumns, setGitHubColumns] = React.useState<GitHubColumns[]>([]);
-  const [gitHubCards, setGitHubCards] = React.useState<GitHubCard[]>([]);
+  const [gitHubProjectCards, setGitHubProjectCards] = React.useState<
+    GitHubProjectCard[]
+  >([]);
   const [gitHubIssues, setGitHubIssues] = React.useState<GitHubIssue[]>([]);
 
   /**
@@ -72,8 +74,11 @@ function Modal() {
   React.useEffect(() => {
     if (gitHubColumns.length > 0) {
       gitHubColumns.map((column) => {
-        fetchGitHubCards(column.id.toString()).then((cards) => {
-          setGitHubCards((previousState) => [...previousState, ...cards]);
+        fetchGitHubProjectCards(column.id.toString()).then((cards) => {
+          setGitHubProjectCards((previousState) => [
+            ...previousState,
+            ...cards,
+          ]);
         });
       });
     }
@@ -88,28 +93,28 @@ function Modal() {
       .then(() => {
         setLoading(false);
       });
-  }, [gitHubCards]);
+  }, [gitHubProjectCards]);
 
   const filterGitHubIssues = () => {
     // Filter out issues that aren't in the current project
     const filteredGitHubIssues = gitHubIssues.filter((issue) => {
-      return gitHubCards.some((gitHubCard) => {
-        return gitHubCard.content_url === issue.url;
+      return gitHubProjectCards.some((gitHubProjectCard) => {
+        return gitHubProjectCard.content_url === issue.url;
       });
     });
 
     const filteredGitHubIssuesWithStatus = filteredGitHubIssues.map((issue) => {
-      // Find matching GitHub Card for Issue
-      const matchingGitHubCard = gitHubCards.find(
+      // Find matching GitHub Project Card for Issue
+      const matchingGitHubProjectCard = gitHubProjectCards.find(
         (card) => card.content_url === issue.url
       );
 
-      if (matchingGitHubCard === undefined) {
+      if (matchingGitHubProjectCard === undefined) {
         throw new TypeError("No Matching GitHub Card for current Issue");
       }
 
       // Find Project Column ID the card lives in
-      const columnId = matchingGitHubCard.column_url
+      const columnId = matchingGitHubProjectCard.column_url
         .split("https://api.github.com/projects/columns/")
         .pop();
 
@@ -122,7 +127,7 @@ function Modal() {
       return {
         ...issue,
         status: status || { name: "", id: null },
-        gitHubCard: matchingGitHubCard,
+        gitHubProjectCard: matchingGitHubProjectCard,
       };
     });
 

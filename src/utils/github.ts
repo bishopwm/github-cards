@@ -94,18 +94,21 @@ export const fetchGitHubColumn = async (column_id: string) => {
  * Returns {
  * }
  */
-export const fetchGitHubCards = async (column_id: string) => {
-  const gitHubCards = fetch(`${baseUrl}/projects/columns/${column_id}/cards`, {
-    method: "GET",
-    headers: headers,
-  })
+export const fetchGitHubProjectCards = async (column_id: string) => {
+  const gitHubProjectCards = fetch(
+    `${baseUrl}/projects/columns/${column_id}/cards`,
+    {
+      method: "GET",
+      headers: headers,
+    }
+  )
     .then((response) => response.json())
     .then((result) => {
       return result;
     })
     .catch((error) => console.error(error));
 
-  return gitHubCards;
+  return gitHubProjectCards;
 };
 
 /**
@@ -115,17 +118,20 @@ export const fetchGitHubCards = async (column_id: string) => {
  * }
  */
 export const fetchGitHubIssues = async (username: string, repo: string) => {
-  const gitHubCards = fetch(`${baseUrl}/repos/${username}/${repo}/issues`, {
-    method: "GET",
-    headers: headers,
-  })
+  const gitHubProjectCards = fetch(
+    `${baseUrl}/repos/${username}/${repo}/issues`,
+    {
+      method: "GET",
+      headers: headers,
+    }
+  )
     .then((response) => response.json())
     .then((result) => {
       return result;
     })
     .catch((error) => console.error(error));
 
-  return gitHubCards;
+  return gitHubProjectCards;
 };
 
 /**
@@ -249,6 +255,8 @@ export const updateGitHubProjectCard = async (
   gitHubProjectCardId: string,
   data: {
     columnId: number;
+    card_id: string;
+    position: string;
   }
 ) => {
   const gitHubProjectCard = fetch(
