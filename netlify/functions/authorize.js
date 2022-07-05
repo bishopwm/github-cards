@@ -28,14 +28,14 @@ exports.handler = async function (event, context, callback) {
 
     await getToken(url);
 
-    return {
-      statusCode: 302,
-      headers: {
-        Location: redirectUrl,
-        "Cache-Control": "no-cache",
-      },
-      body: JSON.stringify({}),
-    };
+    // return {
+    //   statusCode: 302,
+    //   headers: {
+    //     Location: redirectUrl,
+    //     "Cache-Control": "no-cache",
+    //   },
+    //   body: JSON.stringify({}),
+    // };
   } else {
     return {
       statusCode: 404,
