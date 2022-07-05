@@ -9,7 +9,6 @@ const supabase = createClient(
 
 exports.handler = async function (event, context, callback) {
   const queryStringParameters = event.queryStringParameters;
-  console.log("Query String Params", queryStringParameters);
 
   if (!event.queryStringParameters) {
     return {
@@ -25,18 +24,20 @@ exports.handler = async function (event, context, callback) {
   const redirectUrl = `https://miro.com/app-install-completed/?client_id=${clientId}&team_id=${teamId}`;
   const url = `https://api.miro.com/v1/oauth/token?grant_type=authorization_code&client_id=${clientId}&client_secret=${process.env.MIRO_CLIENT_SECRET}&code=${code}&redirect_uri=${process.env.MIRO_REDIRECT_URI}`;
 
+  console.log(process.env.MIRO_REDIRECT_URI);
+
   await fetch(url, {
     method: "POST",
   })
     .then((response) => {
-      console.log(response);
+      console.log("RESPONSE", response);
       return response.json();
       // miro_access_token = response.data.access_token;
       // miro_user_id = response.data.user_id;
       // miro_team_id = response.data.team_id;
     })
     .then((result) => {
-      console.log(result);
+      console.log("RESULT", result);
     });
 
   return {
