@@ -47,6 +47,7 @@ async function getToken(url) {
     method: "POST",
   })
     .then((response) => {
+      console.log(response);
       return response.json();
       // miro_access_token = response.data.access_token;
       // miro_user_id = response.data.user_id;
@@ -58,19 +59,19 @@ async function getToken(url) {
 
   const modifiedAtTime = new Date();
 
-  await supabase
-    .from("auth")
-    .upsert([
-      {
-        access_token: miro_access_token,
-        miroUserId: miro_user_id,
-        modified_at: modifiedAtTime,
-      },
-    ])
-    .then(({ data, error }) => {
-      console.log(data, error);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  // await supabase
+  //   .from("auth")
+  //   .upsert([
+  //     {
+  //       access_token: miro_access_token,
+  //       miroUserId: miro_user_id,
+  //       modified_at: modifiedAtTime,
+  //     },
+  //   ])
+  //   .then(({ data, error }) => {
+  //     console.log(data, error);
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
 }
