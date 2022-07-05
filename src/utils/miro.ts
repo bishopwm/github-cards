@@ -7,6 +7,7 @@ interface MiroSelection {
   y: number;
 }
 
+// Inserts App Cards converted from Sticky Notes
 export const insertAppCards = async (
   selection: MiroSelection,
   selectedColor: { background: string },
@@ -45,6 +46,7 @@ export const removeSelectedItem = async (item: any) => {
   await miro.board.remove(item);
 };
 
+// Inserts App Card chosen from GitHub
 export const insertGitHubAppCards = async (gitHubIssues: any[]) => {
   await Promise.all(
     gitHubIssues.map(async (issue, index) => {
@@ -86,6 +88,10 @@ export const insertGitHubAppCards = async (gitHubIssues: any[]) => {
           gitHubProjectCardId: issue.gitHubProjectCard.id,
         },
       ]);
+
+      if (index === 0) {
+        await miro.board.viewport.zoomTo(appCard);
+      }
     })
   );
 };

@@ -24,7 +24,9 @@ function App() {
   const [gitHubProjects, setGitHubProjects] = React.useState<GitHubProject[]>(
     []
   );
-  const [gitHubColumns, setGitHubColumns] = React.useState<GitHubColumns[]>([]);
+  const [gitHubColumns, setGitHubColumns] = React.useState<GitHubColumns[]>([
+    { name: "", id: 0 },
+  ]);
 
   /**
    * Store selected project options
@@ -52,13 +54,21 @@ function App() {
     const appCardId = urlParams.get("appCardId");
     const appCardTitle = urlParams.get("appCardTitle");
     const appCardDescription = urlParams.get("appCardDescription");
+    const currentStatus = urlParams.get("currentStatus");
 
-    if (appCardId && appCardTitle && appCardDescription) {
+    if (appCardId && appCardTitle && appCardDescription && currentStatus) {
+      const status = gitHubColumns.find(
+        (column) => column.name === currentStatus
+      );
+
       setAppCardId(appCardId);
       setNewTitle(appCardTitle);
       setNewDescription(appCardDescription);
+      if (status) {
+        setSelectedColumn(status);
+      }
     }
-  }, []);
+  }, [gitHubColumns]);
 
   // Fetch GitHub Projects
   React.useEffect(() => {
@@ -79,14 +89,10 @@ function App() {
         gitHubProjects
           .filter((project) => project.id !== selectedProject.id)[0]
           .id.toString()
-      )
-        .then((columns) => {
-          setGitHubColumns([...columns]);
-          return columns;
-        })
-        .then((columns) => {
-          setSelectedColumn(columns[0]);
-        });
+      ).then((columns) => {
+        setGitHubColumns([...columns]);
+        return columns;
+      });
     }
   }, [gitHubProjects]);
 
@@ -102,7 +108,7 @@ function App() {
           Promise.all(
             data.map(async (item) => {
               const gitHubIssueNumber = item.gitHubIssueNumber;
-              const color = getStatusColor(selectedColumn.name);
+              const color = await getStatusColor(selectedColumn.name);
 
               // Update GitHub Issue
               await updateGitHubIssue(username, repo, gitHubIssueNumber, {
@@ -152,12 +158,14 @@ function App() {
         label="GitHub Project"
         required={true}
         options={gitHubProjects}
+        selected={selectedProject}
         onChange={(e) => setSelectedProject(JSON.parse(e.target.value))}
       />
       <Select
         label="Column"
         required={true}
         options={gitHubColumns}
+        selected={selectedColumn}
         onChange={(e) => setSelectedColumn(JSON.parse(e.target.value))}
       />
       <Input

@@ -4,11 +4,15 @@ const Select = ({
   label,
   required,
   options,
+  selected = { name: "" },
   onChange,
 }: {
   label: string;
   required: boolean;
   options: any[];
+  selected: {
+    name: string;
+  };
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }) => {
   return (
@@ -20,7 +24,11 @@ const Select = ({
         {options &&
           options.map((option, index) => {
             return (
-              <option value={JSON.stringify(option)} key={index}>
+              <option
+                value={JSON.stringify(option)}
+                key={index}
+                selected={option.name === selected.name}
+              >
                 {option.name}
               </option>
             );
