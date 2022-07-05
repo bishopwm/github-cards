@@ -45,6 +45,8 @@ exports.handler = async function (event, context, callback) {
 };
 
 async function getToken(url) {
+  console.log("getting token");
+
   fetch(url, {
     method: "POST",
   })
