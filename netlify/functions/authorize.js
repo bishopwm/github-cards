@@ -1,4 +1,5 @@
 import axios from "axios";
+import fetch from "node-fetch";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
@@ -42,11 +43,18 @@ exports.handler = async function (event, context, callback) {
 };
 
 async function getToken(url) {
-  let oauthResponse = await axios.post(url);
-
-  miro_access_token = oauthResponse.data.access_token;
-  miro_user_id = oauthResponse.data.user_id;
-  miro_team_id = oauthResponse.data.team_id;
+  fetch(url, {
+    method: "POST",
+  })
+    .then((response) => {
+      return response.json();
+      // miro_access_token = response.data.access_token;
+      // miro_user_id = response.data.user_id;
+      // miro_team_id = response.data.team_id;
+    })
+    .then((result) => {
+      console.log(result);
+    });
 
   const modifiedAtTime = new Date();
 
