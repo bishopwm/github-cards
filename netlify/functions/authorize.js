@@ -16,6 +16,8 @@ exports.handler = async function (event, context, callback) {
     };
   }
 
+  console.log("Query String Params", queryStringParameters);
+
   let code = queryStringParameters.code;
   let clientId = queryStringParameters.client_id;
   let teamId = queryStringParameters.team_id;
@@ -29,12 +31,12 @@ exports.handler = async function (event, context, callback) {
     .then((response) => {
       return response.json();
     })
-    .then((result) => {
+    .then(async (result) => {
       const miro_access_token = result.access_token;
       const miro_user_id = result.user_id;
       const modifiedAtTime = new Date();
 
-      supabase
+      await supabase
         .from("auth")
         .upsert([
           {
