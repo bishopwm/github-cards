@@ -26,7 +26,7 @@ exports.handler = async function (event, context, callback) {
 
     console.log("URL constructed", url);
 
-    getToken(url);
+    await getToken(url);
 
     return {
       statusCode: 302,
