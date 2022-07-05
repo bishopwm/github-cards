@@ -123,22 +123,23 @@ function App() {
                 position: "top",
               });
 
-              // Update App Card
+              // Update App Card via SDK
               const currentAppCard = await miro.board.getById(appCardId);
+              if (currentAppCard) {
+                currentAppCard.title = newTitle;
+                currentAppCard.description = newDescription;
+                currentAppCard.fields = [
+                  {
+                    value: selectedColumn.name,
+                    iconShape: "square",
+                    fillColor: color,
+                    textColor: "#ffffff",
+                  },
+                ];
+                currentAppCard.style.cardTheme = color;
 
-              currentAppCard.title = newTitle;
-              currentAppCard.description = newDescription;
-              currentAppCard.fields = [
-                {
-                  value: selectedColumn.name,
-                  iconShape: "square",
-                  fillColor: color,
-                  textColor: "#ffffff",
-                },
-              ];
-              currentAppCard.style.cardTheme = color;
-
-              await currentAppCard.sync();
+                await currentAppCard.sync();
+              }
             })
           ).then(() => {
             miro.board.ui.closeModal();
