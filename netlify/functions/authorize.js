@@ -26,16 +26,16 @@ exports.handler = async function (event, context, callback) {
 
     console.log("URL constructed", url);
 
-    await getToken(url);
-
-    // return {
-    //   statusCode: 302,
-    //   headers: {
-    //     Location: redirectUrl,
-    //     "Cache-Control": "no-cache",
-    //   },
-    //   body: JSON.stringify({}),
-    // };
+    getToken(url).then(() => {
+      return {
+        statusCode: 302,
+        headers: {
+          Location: redirectUrl,
+          "Cache-Control": "no-cache",
+        },
+        body: JSON.stringify({}),
+      };
+    });
   } else {
     return {
       statusCode: 404,
@@ -45,9 +45,9 @@ exports.handler = async function (event, context, callback) {
 };
 
 async function getToken(url) {
-  console.log("getting token");
+  console.log("getting token", url);
 
-  fetch(url, {
+  await fetch(url, {
     method: "POST",
   })
     .then((response) => {
@@ -63,6 +63,7 @@ async function getToken(url) {
 
   const modifiedAtTime = new Date();
 
+  console.log("Modified Time", modifiedAtTime);
   // await supabase
   //   .from("auth")
   //   .upsert([
