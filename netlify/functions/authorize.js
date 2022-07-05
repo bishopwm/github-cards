@@ -8,44 +8,22 @@ const supabase = createClient(
 );
 
 exports.handler = async function (event, context, callback) {
-  if (event.httpMethod == "GET") {
-    if (!event.queryStringParameters) {
-      return {
-        statusCode: 404,
-        body: JSON.stringify({ message: "Authorization URL incorrect" }),
-      };
-    }
-    const queryStringParameters = event.queryStringParameters;
+  const queryStringParameters = event.queryStringParameters;
+  console.log("Query String Params", queryStringParameters);
 
-    let code = queryStringParameters.code;
-    let clientId = queryStringParameters.client_id;
-    let teamId = queryStringParameters.team_id;
-
-    const redirectUrl = `https://miro.com/app-install-completed/?client_id=${clientId}&team_id=${teamId}`;
-    const url = `https://api.miro.com/v1/oauth/token?grant_type=authorization_code&client_id=${clientId}&client_secret=${process.env.MIRO_CLIENT_SECRET}&code=${code}&redirect_uri=${process.env.MIRO_REDIRECT_URL}`;
-
-    console.log("URL constructed", url);
-
-    getToken(url).then(() => {
-      return {
-        statusCode: 302,
-        headers: {
-          Location: redirectUrl,
-          "Cache-Control": "no-cache",
-        },
-        body: JSON.stringify({}),
-      };
-    });
-  } else {
+  if (!event.queryStringParameters) {
     return {
       statusCode: 404,
-      body: JSON.stringify({ message: "Verb not supported" }),
+      body: JSON.stringify({ message: "Authorization URL incorrect" }),
     };
   }
-};
 
-async function getToken(url) {
-  console.log("getting token", url);
+  let code = queryStringParameters.code;
+  let clientId = queryStringParameters.client_id;
+  let teamId = queryStringParameters.team_id;
+
+  const redirectUrl = `https://miro.com/app-install-completed/?client_id=${clientId}&team_id=${teamId}`;
+  const url = `https://api.miro.com/v1/oauth/token?grant_type=authorization_code&client_id=${clientId}&client_secret=${process.env.MIRO_CLIENT_SECRET}&code=${code}&redirect_uri=${process.env.MIRO_REDIRECT_URL}`;
 
   await fetch(url, {
     method: "POST",
@@ -60,6 +38,26 @@ async function getToken(url) {
     .then((result) => {
       console.log(result);
     });
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ message: "Request Sent" }),
+  };
+
+  // getToken(url).then(() => {
+  //   return {
+  //     statusCode: 302,
+  //     headers: {
+  //       Location: redirectUrl,
+  //       "Cache-Control": "no-cache",
+  //     },
+  //     body: JSON.stringify({}),
+  //   };
+  // });
+};
+
+async function getToken(url) {
+  console.log("getting token", url);
 
   const modifiedAtTime = new Date();
 
