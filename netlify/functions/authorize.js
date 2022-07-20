@@ -31,6 +31,7 @@ exports.handler = async function (event, context, callback) {
       return response.json();
     })
     .then(async (result) => {
+      console.log(result);
       const miro_access_token = result.access_token;
       const miro_user_id = result.user_id;
       const modifiedAtTime = new Date();
