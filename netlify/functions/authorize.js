@@ -36,18 +36,15 @@ exports.handler = async function (event, context, callback) {
       const miro_user_id = result.user_id;
       const modifiedAtTime = new Date();
 
-      await supabase
-        .from("auth")
-        .upsert([
-          {
-            access_token: miro_access_token,
-            miroUserId: miro_user_id,
-            modified_at: modifiedAtTime,
-          },
-        ])
-        .catch((err) => {
-          console.log(err);
-        });
+      const { data, error } = await supabase.from("auth").upsert([
+        {
+          access_token: miro_access_token,
+          miroUserId: miro_user_id,
+          modified_at: modifiedAtTime,
+        },
+      ]);
+
+      console.log(data, error);
     });
 
   return {
