@@ -6,7 +6,6 @@ async function init() {
   // Listen to the 'app_card:open' event
   miro.board.ui.on("app_card:open", (event) => {
     const { appCard } = event;
-    console.log(appCard);
     const baseUrl = import.meta.env.VITE_BASE_URL;
     let currentStatus;
 

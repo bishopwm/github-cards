@@ -278,7 +278,6 @@ export const updateGitHubProjectCard = async (
   gitHubProjectCardId: string,
   data: {
     columnId: number;
-    card_id: string;
     position: string;
   }
 ) => {
@@ -290,9 +289,10 @@ export const updateGitHubProjectCard = async (
       body: JSON.stringify(data),
     }
   )
-    .then((response) => response.json())
+    .then((response) => {
+      return response.json();
+    })
     .then((result) => {
-      console.log(result);
       return result;
     })
     .catch((error) => console.error(error));

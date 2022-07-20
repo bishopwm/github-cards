@@ -119,7 +119,6 @@ function App() {
               // Update GitHub Project Card
               await updateGitHubProjectCard(item.gitHubProjectCardId, {
                 columnId: selectedColumn.id,
-                card_id: item.gitHubProjectCardId,
                 position: "top",
               });
 

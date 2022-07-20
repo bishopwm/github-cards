@@ -108,7 +108,6 @@ exports.handler = async function (event) {
             options
           )
             .then((res) => {
-              console.log("got response", res);
               if (res.ok) {
                 return res.json();
               } else {

@@ -68,7 +68,6 @@ const Miro = () => {
       if (stickyNotes.length > 0) {
         setItemsSelected(true);
         setSelectedItems([...selectedItems]);
-        console.log(selectedItems);
       } else {
         setItemsSelected(false);
         setSelectedItems([]);
