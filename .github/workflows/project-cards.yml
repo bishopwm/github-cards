@@ -10,6 +10,6 @@ jobs:
       - name: Update Project Cards
         uses: fjogeleit/http-request-action@v1.9.1
         with:
-          url: "https://miro-github.netlify.app/.netlify/functions/project-cards"
+          url: "https://main--melodic-sunflower-3dfb98.netlify.app/.netlify/functions/project-cards"
           method: "POST"
           data: '{"gitHubProjectCard": ${{ toJSON(github.event.project_card) }}}'
