@@ -8,6 +8,6 @@ jobs:
       - name: Update Issues
         uses: fjogeleit/http-request-action@v1.9.1
         with:
-          url: "https://peaceful-fairy-c2e727.netlify.app/.netlify/functions/issues"
+          url: "https://snazzy-platypus-c62bcd.netlify.app/.netlify/functions/issues"
           method: "POST"
           data: '{"gitHubIssue": ${{ toJSON(github.event.issue) }}}'
